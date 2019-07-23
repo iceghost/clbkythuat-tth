@@ -1,0 +1,21 @@
+{
+  "name": "clbkythuat-tth",
+  "version": "1.0.0",
+  "description": "My club's website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iceghosttth/clbkythuat-tth.git"
+  },
+  "author": "Nguyen Duy Khang",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "ip": "^1.1.5",
+    "socket.io": "^2.2.0"
+  }
+}

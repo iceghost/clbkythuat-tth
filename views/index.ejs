@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Trang chủ</title>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="stylesheet" href="w3.css">
+  <link rel="shortcut icon" href="favicon.ico">
+  <style>
+
+  </style>
+
+  <script src="jquery-3.4.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="virtualjoystick.js"></script>
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <div class="w3-bar w3-blue">
+    <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
+  </div>
+  <div class="w3-container">
+    <div class="w3-row">
+      <div class="w3-half w3-container">
+        <h1>Bảng điều khiển</h1>
+        <p>Các nút:</p>
+        <input type="button" class="w3-btn w3-red" value="Nút 1">
+        <input type="button" class="w3-btn w3-red" value="Nút 2">
+        <input type="button" class="w3-btn w3-red" value="Nút 3">
+        <p>Thanh trượt: <span id="angle"></span></p>
+        <input type="range" min=0 max=360 value=0 style="width: 100%" id="servo-range" />
+      </div>
+      <div class="w3-half w3-container">
+        <h1>Touchpad</h1>
+        <p>Tốc độ: <span id="speed">0</span></p>
+        <input type="range" min=0 max=3 value=0 style="width: 100%" id="speed-range" />
+        <p>Tọa độ: x = <span id="x"></span>; y = <span id="y"></span></p>
+        <div id="touchpad" style="height: 300px; width: 100%; background-color: gray"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
