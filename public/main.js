@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  var socket = io();
   var joystick	= new VirtualJoystick({
   				container	: document.getElementById('touchpad'),
   				mouseSupport	: true,
@@ -16,4 +17,9 @@ $(document).ready(() => {
   $('#servo-range').on('input change', () => {
     $('#angle').html($('#servo-range').val());
   });
+
+  $('#btn-1').click(() => {
+    text = $('#cmd-1').val();
+    // socket.emit($('#'))
+  })
 })

@@ -4,13 +4,10 @@
 <head>
   <title>Trang chủ</title>
   <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
   <link rel="stylesheet" href="w3.css">
   <link rel="shortcut icon" href="favicon.ico">
-  <style>
-
-  </style>
 
   <script src="jquery-3.4.1.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
@@ -24,12 +21,53 @@
   </div>
   <div class="w3-container">
     <div class="w3-row">
+      <div class="w3-container w3-col" style="width: auto;">
+        <p>Password: </p>
+      </div>
+      <div class="w3-container w3-rest">
+        <input type="password" class="w3-input" id="pass"/>
+      </div>
+    </div>
+    <div class="w3-container">
+      <h2>Trạng thái: </h2>
+      <p>Password đúng, Arduino online</p>
+    </div>
+    <div class="w3-row">
       <div class="w3-half w3-container">
         <h1>Bảng điều khiển</h1>
-        <p>Các nút:</p>
-        <input type="button" class="w3-btn w3-red" value="Nút 1">
-        <input type="button" class="w3-btn w3-red" value="Nút 2">
-        <input type="button" class="w3-btn w3-red" value="Nút 3">
+        <p>Gửi lệnh:</p>
+        <div class="w3-row">
+          <div class="w3-col" style="width: auto;">
+            <input type="button" value="Nút 1" class="w3-button w3-red" id="btn-1"/>
+          </div>
+          <div class="w3-rest">
+            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-1"/>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-col" style="width: auto;">
+            <input type="button" value="Nút 2" class="w3-button w3-red" id="btn-2"/>
+          </div>
+          <div class="w3-rest">
+            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-2"/>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-col" style="width: auto;">
+            <input type="button" value="Nút 3" class="w3-button w3-red" id="btn-3"/>
+          </div>
+          <div class="w3-rest">
+            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-3"/>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-col" style="width: auto;">
+            <input type="button" value="Nút 4" class="w3-button w3-red" id="btn-4"/>
+          </div>
+          <div class="w3-rest">
+            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-4"/>
+          </div>
+        </div>
         <p>Thanh trượt: <span id="angle"></span></p>
         <input type="range" min=0 max=360 value=0 style="width: 100%" id="servo-range" />
       </div>
