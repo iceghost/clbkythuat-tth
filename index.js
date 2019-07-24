@@ -14,7 +14,9 @@ app.get('/', (req, res) => {
 });
 
 io.on("connection", (socket) => {
-
+  socket.on('gui-lenh', (data) => {
+    console.log(data)
+  });
 });
 
 server.listen(PORT, () => console.log(`Example app listening on port 3000! IP Address:  ${ip.address()}`));
