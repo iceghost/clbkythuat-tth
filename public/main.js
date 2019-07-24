@@ -16,7 +16,7 @@ $(document).ready(() => {
 
   $('#speed-range').on('change', () => {
     let value = $('#speed-range').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), tocdo: value})
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'tocdo', giatri: value}});
   });
 
   $('#slider-range').on('input change', () => {
@@ -25,26 +25,26 @@ $(document).ready(() => {
 
   $('#slider-range').on('change', () => {
     let value = $('#slider-range').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), thanhtruot: value})
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'thanhtruot', giatri: value}});
   });
 
   $('#btn-1').click(() => {
     let text = $('#cmd-1').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), lenh: text})
-  })
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
+  });
 
   $('#btn-2').click(() => {
     let text = $('#cmd-2').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), lenh: text})
-  })
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
+  });
 
   $('#btn-3').click(() => {
     let text = $('#cmd-3').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), lenh: text})
-  })
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
+  });
 
   $('#btn-4').click(() => {
     let text = $('#cmd-4').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), lenh: text})
-  })
+    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
+  });
 })

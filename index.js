@@ -13,9 +13,17 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+var login = {}; // Danh sách những arduino đăng nhập, login[pass] = id của socket
+// Nếu pass bị trùng thì hỏng hết :))
+
 io.on("connection", (socket) => {
+  // Arduino đăng nhập tại đây
+  socket.on('dang-nhap', (data) => {
+    login.data = socket.id;
+  });
+
   socket.on('gui-lenh', (data) => {
-    console.log(data)
+    socket.broadcast.to(login[data.pass]).emit('gui-lenh', data.value); // gửi đến socket có id trong JSON login
   });
 });
 
