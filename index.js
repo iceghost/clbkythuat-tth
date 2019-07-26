@@ -13,17 +13,41 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-var login = {}; // Danh sách những arduino đăng nhập, login[pass] = id của socket
+var login = []; // Danh sách những arduino đăng nhập, login[...].id = id của socket
 // Nếu pass bị trùng thì hỏng hết :))
 
 io.on("connection", (socket) => {
   // Arduino đăng nhập tại đây
+  socket.emit('Hello', {data: 'hello', id: 0})
   socket.on('dang-nhap', (data) => {
-    login.data = socket.id;
+    // console.log('Login from ' + socket.id)
+    login.forEach((item, index) => {
+        if (item.pass == data){
+          login.splice(index, 1);
+        }
+    });
+    login.push({pass: data, id: socket.id})
   });
 
   socket.on('gui-lenh', (data) => {
-    socket.broadcast.to(login[data.pass]).emit('gui-lenh', data.value); // gửi đến socket có id trong JSON login
+    // console.log('Sending message:');
+    // console.log(data.value);
+    // console.log(' to ' + login[data.pass]);
+    let id = '';
+    login.forEach((item, index) => {
+      if (item.pass = data.pass){
+        id = item.id;
+      }
+    });
+    socket.broadcast.to(id).emit('gui-lenh', data.value); // gửi đến socket có id trong JSON login
+  });
+
+  socket.on('disconnect', () => {
+    login.forEach((item, index) => {
+      if (item.id == socket.id){
+        login.splice(index, 1);
+      }
+    })
   });
 });
 
