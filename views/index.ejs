@@ -12,6 +12,7 @@
   <script src="jquery-3.4.1.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="main.js"></script>
+  <script src="nipplejs.js"></script>
 </head>
 
 <body>
@@ -73,7 +74,10 @@
       </div>
       <div class="w3-half w3-container">
         <h1>Touchpad</h1>
-        <iframe src="joystick.html" style="height: 300px; width: 100%;"></iframe>
+        <p><b>Tốc độ</b>: <span id="speed">đứng yên</span></p>
+        <input type="range" min=0 max=3 value=0 id="speed-range"/>
+        <p><b>Tọa độ</b>: x = <span id="x"></span>, y = <span id="y"></span></p>
+        <div id="touchpad" style="width: 100%; height: 250px; position: relative; background-color: lightgray"></div>
       </div>
     </div>
   </div>
