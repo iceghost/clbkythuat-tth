@@ -13,6 +13,10 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.get('/guide', (req, res) => {
+  res.render('guide');
+});
+
 var login = []; // Danh sách những arduino đăng nhập, login[...].id = id của socket
 // Nếu pass bị trùng thì hỏng hết :))
 
@@ -30,9 +34,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on('gui-lenh', (data) => {
-    // console.log('Sending message:');
-    // console.log(data.value);
-    // console.log(' to ' + login[data.pass]);
+    console.log('Sending message:');
+    console.log(data.value);
+    console.log(' to ' + login[data.pass]);
     let id = '';
     login.forEach((item, index) => {
       if (item.pass = data.pass){

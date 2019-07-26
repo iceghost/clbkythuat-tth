@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Trang chủ</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+  <link rel="stylesheet" href="w3.css">
+  <link rel="shortcut icon" href="favicon.ico">
+
+
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="virtualjoystick.js"></script>
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <div class="w3-bar w3-blue">
+    <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
+    <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
+  </div>
+  <div class="w3-container w3-row">
+    <div class="w3-container w3-col s12 m6">
+      <h1>Hướng dẫn</h1>
+      <p>Đầu tiên ta kết nối con ESP lên server bằng cách: phát sự kiện <span class="w3-codespan">dang-nhap</span> lên server với tham số là <span class="w3-codespan">password</span> (tự đặt, càng bảo mật càng tốt). Đặt dòng này trong <span class="w3-codespan">void setup()</span>:</p>
+      <div class="w3-code w3-light-gray">socket.send("dang-nhap", "123456");</div>
+      <p>hoặc (tùy theo thư viện đang dùng)</p>
+      <div class="w3-code w3-light-gray">socket.emit("dang-nhap", "123456");</div>
+      <p>Sau đó nhập <span class="w3-codespan">password</span> tương ứng vào trong ô đầu tiên ở trang chủ (trên cùng). Từ đó điều khiển thoải mái với các nút và lệnh ở bên dưới.</p>
+    </div>
+  </div>
+</body>
+
+</html>
