@@ -11,7 +11,6 @@
 
   <script src="jquery-3.4.1.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="virtualjoystick.js"></script>
   <script src="main.js"></script>
 </head>
 
@@ -74,10 +73,7 @@
       </div>
       <div class="w3-half w3-container">
         <h1>Touchpad</h1>
-        <p>Tốc độ: <span id="speed">0</span></p>
-        <input type="range" min=0 max=3 value=0 style="width: 100%" id="speed-range" />
-        <p>Tọa độ: x = <span id="x"></span>; y = <span id="y"></span></p>
-        <div id="touchpad" style="height: 300px; width: 100%; background-color: gray"></div>
+        <iframe src="joystick.html" style="height: 300px; width: 100%;"></iframe>
       </div>
     </div>
   </div>

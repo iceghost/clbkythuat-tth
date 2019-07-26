@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="w3.css">
+		<style>
+		body {
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			background-color: #BBB;
+		}
+		#info {
+			position	: absolute;
+			top		: 0px;
+			width		: 100%;
+			padding		: 5px;
+			text-align	: center;
+		}
+		#info a {
+			color		: #66F;
+			text-decoration	: none;
+		}
+		#info a:hover {
+			text-decoration	: underline;
+		}
+		#container {
+			width		: 100%;
+			height		: 100%;
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			-webkit-user-select	: none;
+			-moz-user-select	: none;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+    <div id="info">
+        <span id="speed"><b>Tốc độ: </b>đứng yên</span><br/>
+        <input type="range" min=0 max=3 value=0 id="speed-range"/><br/>
+		    <span id="result"></span>
+		</div>
+		<script src="virtualjoystick.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
+		<script>
+    $(document).ready(() => {
+      var socket = io();
+      var tocdo = ['đứng yên', 'chậm', 'vừa', 'nhanh']
+      var x, y, prev_x, prev_y;
+
+      $('#speed-range').on('input change', () => {
+        $('#speed').html('<b>Tốc độ</b>: ' + tocdo[$('#speed-range').val()]);
+      });
+
+			var joystick	= new VirtualJoystick({
+				container	: document.getElementById('container'),
+				mouseSupport	: true,
+			});
+
+			setInterval(function(){
+				var outputEl	= document.getElementById('result');
+        x = Math.round(joystick.deltaX());
+        y = Math.round(joystick.deltaY()) * (-1)
+				outputEl.innerHTML	= '<b>Tọa độ:</b> x = ' + Math.round(joystick.deltaX())	+ ', y = ' + y;
+        if (prev_x != x && prev_y != y){
+          socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'joystick', tocdo: $('#speed-range').val(), x: x, y: y}});
+        }
+        prev_x = x;
+        prev_y = y;
+			}, 1/30 * 1000);
+    })
+		</script>
+	</body>
+</html>
