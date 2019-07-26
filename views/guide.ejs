@@ -2,17 +2,20 @@
 <html>
 
 <head>
-  <title>Trang chủ</title>
+  <title>Hướng dẫn</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
   <link rel="stylesheet" href="w3.css">
   <link rel="shortcut icon" href="favicon.ico">
 
+  <!-- Highlight code -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/vs2015.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/languages/arduino.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
-  
   <script src="/socket.io/socket.io.js"></script>
-  <script src="virtualjoystick.js"></script>
   <script src="main.js"></script>
 </head>
 
@@ -21,14 +24,105 @@
     <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
     <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
   </div>
-  <div class="w3-container w3-row">
+  <div class="w3-row">
+    <div class="w3-container w3-col w3-hide-small m3 w3-right-align w3-indigo">
+      <ul class="w3-ul">
+        <li><h1>Mục lục</h1></li>
+        <li><a href="#library">Cài thư viện</a></li>
+        <li><a href="#example">Code mẫu</a></li>
+      </ul>
+    </div>
     <div class="w3-container w3-col s12 m6">
-      <h1>Hướng dẫn</h1>
-      <p>Đầu tiên ta kết nối con ESP lên server bằng cách: phát sự kiện <span class="w3-codespan">dang-nhap</span> lên server với tham số là <span class="w3-codespan">password</span> (tự đặt, càng bảo mật càng tốt). Đặt dòng này trong <span class="w3-codespan">void setup()</span>:</p>
-      <div class="w3-code w3-light-gray">socket.send("dang-nhap", "123456");</div>
-      <p>hoặc (tùy theo thư viện đang dùng)</p>
-      <div class="w3-code w3-light-gray">socket.emit("dang-nhap", "123456");</div>
-      <p>Sau đó nhập <span class="w3-codespan">password</span> tương ứng vào trong ô đầu tiên ở trang chủ (trên cùng). Từ đó điều khiển thoải mái với các nút và lệnh ở bên dưới.</p>
+      <h1 id="library">Cài thư viện</h1>
+      <p>Tải và cài 3 thư viện sau:<p>
+      <ul>
+        <li><a href="https://github.com/timum-viw/socket.io-client">socket.io-client</a></li>
+        <li><a href="https://github.com/Links2004/arduinoWebSockets">arduinoWebSockets</a></li>
+        <li><a href="https://github.com/bblanchon/ArduinoJson">ArduinoJson</a></li>
+      </ul>
+      <h1 id="example">Code mẫu</h1>
+      <p>Các đoạn quan trọng hoặc cần được điều chỉnh ở những chỗ màu xanh lá</p>
+      <pre>
+<code class="arduino">#include &lt;Arduino.h&gt;
+#include &lt;ESP8266WiFi.h&gt;
+#include &lt;ArduinoJson.h&gt;
+#include &lt;SocketIoClient.h&gt;
+
+SocketIoClient socket;
+
+const int capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 40;
+StaticJsonDocument&lt;capacity&gt; json;
+
+const char * host = "clbkythuattanthonghoi.herokuapp.com";
+const int port = 80;
+
+
+void setup() {
+  Serial.begin(115200);
+
+  // Đổi tên và mật khẩu WiFi tại đây:
+  WiFi.begin("xxxxxxxx", "xxxxxxxx");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  socket.on("gui-lenh", event);
+
+  socket.on("connect", [](const char * payload, size_t length) {
+    // Đổi mật khẩu của con ESP tại đây: (càng bảo mật càng tốt)
+    socket.emit("dang-nhap", "\"123456\"");
+  });
+  socket.begin(host, port);
+}
+
+
+void loop() {
+  socket.loop();
+}
+
+
+void event(const char * payload, size_t length) {
+  deserializeJson(json, payload);
+  String lenh = json["lenh"];
+
+  if (lenh == "guilenh"){
+    String giatri = json["giatri"];
+
+    // Xử lý nút gửi lệnh tại đây:
+    Serial.print("Nhan duoc lenh: ");
+    Serial.println(giatri);
+  }
+
+  else if (lenh == "thanhtruot"){
+    int giatri = json["giatri"];
+
+    // Xử lý giá trị thanh trượt tại đây:
+    Serial.print("Gia tri thanh truot: ");
+    Serial.println(giatri);
+  }
+
+  else if (lenh == "joystick"){
+    int x = json["giatri"]["x"];
+    int y = json["giatri"]["y"];
+    int tocdo = json["giatri"]["tocdo"];
+
+    // Xử lý tọa độ x, y, tốc độ tại đây:
+    Serial.print("x = ");
+    Serial.print(x);
+    Serial.print(" y = ");
+    Serial.print(y);
+    Serial.print(" tocdo = ");
+    Serial.println(tocdo);
+  }
+}</code>
+      </pre>
     </div>
   </div>
 </body>

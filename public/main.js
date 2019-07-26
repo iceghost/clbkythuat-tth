@@ -62,4 +62,22 @@ $(document).ready(() => {
     $('#y').html(y);
     socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'joystick', giatri: {x: x, y: y, tocdo: parseInt($('#speed-range').val())}}});
   });
+
+  //
+  // code của password
+  //
+
+  // $('#pass').focusout(() => {
+  //   socket.emit('tim-nguoi-than', $('#pass').val())
+  // });
+
+  setInterval(() => { socket.emit('tim-nguoi-than', $('#pass').val()) }, 5000);
+
+  socket.on('tim-thay', () => {
+    $('#status').html('Online <i class="fas fa-globe w3-text-green"></i>')
+  })
+
+  socket.on('khong-tim-thay', () => {
+    $('#status').html('Offline <i class="fas fa-globe w3-text-red"></i>')
+  })
 })
