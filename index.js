@@ -17,6 +17,10 @@ app.get('/guide', (req, res) => {
   res.render('guide');
 });
 
+app.get('/voice', (req, res) => {
+  res.render('voice');
+})
+
 var login = []; // Danh sách những arduino đăng nhập, login[...].id = id của socket
 // Nếu pass bị trùng thì hỏng hết :))
 

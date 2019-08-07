@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Trang chủ</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="w3.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <script src="https://kit.fontawesome.com/f8ff5afc76.js"></script>
+
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="w3-bar w3-blue">
+        <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
+        <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
+        <a href="/voice" class="w3-bar-item w3-button w3-mobile">Giọng nói</a>
+    </div>
+    <div class="w3-container">
+        <div id="command">
+        </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script>
+        if (annyang) {
+            // Let's define a command.
+            var commands = {
+                '*words': (words) => { $('#command').append(words) }
+            };
+
+            annyang.setLanguage("vi-VN");
+
+            // Add our commands to annyang
+            annyang.addCommands(commands);
+
+            // Start listening.
+            annyang.start();
+        }
+    </script>
+</body>
+
+</html>
