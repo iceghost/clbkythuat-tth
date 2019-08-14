@@ -29,7 +29,7 @@
         if (annyang) {
             // Let's define a command.
             var commands = {
-                '*words': (words) => { $('#command').append(words) }
+                '*words': (words) => { $('#command').append('<p>' + words + '</p>') }
             };
 
             annyang.setLanguage("vi-VN");
