@@ -17,11 +17,14 @@
 </head>
 
 <body>
+  <input type="text" autofocus style="display:none" />
+  <!-- Navbar -->
   <div class="w3-bar w3-blue">
     <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
     <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
     <a href="/voice" class="w3-bar-item w3-button w3-mobile">Giọng nói</a>
   </div>
+  <!-- Password -->
   <div class="w3-container">
     <div class="w3-row">
       <div class="w3-container w3-col" style="width: auto;">
@@ -31,6 +34,7 @@
         <input type="password" class="w3-input" id="pass"/>
       </div>
     </div>
+    <!-- Trạng thái ESP -->
     <div class="w3-container">
       <h2>Trạng thái: </h2>
       <p>ESP <span id="status">Offline <i class="fas fa-globe w3-text-red"></i><span></p>
@@ -39,45 +43,21 @@
       <div class="w3-half w3-container">
         <h1>Bảng điều khiển</h1>
         <p>Gửi lệnh:</p>
-        <div class="w3-row">
-          <div class="w3-col" style="width: auto;">
-            <input type="button" value="Nút 1" class="w3-button w3-red" id="btn-1"/>
-          </div>
-          <div class="w3-rest">
-            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-1"/>
-          </div>
-        </div>
-        <div class="w3-row">
-          <div class="w3-col" style="width: auto;">
-            <input type="button" value="Nút 2" class="w3-button w3-red" id="btn-2"/>
-          </div>
-          <div class="w3-rest">
-            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-2"/>
-          </div>
-        </div>
-        <div class="w3-row">
-          <div class="w3-col" style="width: auto;">
-            <input type="button" value="Nút 3" class="w3-button w3-red" id="btn-3"/>
-          </div>
-          <div class="w3-rest">
-            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-3"/>
-          </div>
-        </div>
-        <div class="w3-row">
-          <div class="w3-col" style="width: auto;">
-            <input type="button" value="Nút 4" class="w3-button w3-red" id="btn-4"/>
-          </div>
-          <div class="w3-rest">
-            <input type="text" placeholder="Lệnh" class="w3-input w3-border" id="cmd-4"/>
-          </div>
-        </div>
+        <!-- Dãy lệnh -->
+        <div id="cmd-box"></div>
+        <p>
+          <input type="button" class="w3-button w3-blue" value="Thêm" id="add-cmd">
+          <input type="button" class="w3-button w3-red" value="Bớt" id="remove-cmd">
+        </p>
+        <!-- Thanh trượt -->
         <p>Thanh trượt: <span id="angle"></span></p>
         <input type="range" min=0 max=360 value=0 style="width: 100%" id="slider-range" />
       </div>
+      <!-- Touchpad -->
       <div class="w3-half w3-container">
         <h1>Touchpad</h1>
         <p><b>Tốc độ</b>: <span id="speed">đứng yên</span></p>
-        <input type="range" min=0 max=3 value=0 id="speed-range"/>
+        <input type="range" min=0 max=3 value=0 id="speed-range" />
         <p><b>Tọa độ</b>: x = <span id="x"></span>, y = <span id="y"></span></p>
         <div id="touchpad" style="width: 100%; height: 250px; position: relative; background-color: lightgray"></div>
       </div>

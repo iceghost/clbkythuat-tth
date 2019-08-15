@@ -5,33 +5,23 @@ $(document).ready(() => {
   // code của thanh trượt + nút bấm
   //
 
+  function send_cmd(pass, cmd, val) {
+    socket.emit('gui-lenh', {
+      pass: pass,
+      value: {
+        lenh: cmd,
+        giatri: val
+      }
+    });
+  }
+
   $('#slider-range').on('input change', () => {
     $('#angle').html($('#slider-range').val());
   });
 
   $('#slider-range').on('change', () => {
     let value = $('#slider-range').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'thanhtruot', giatri: value}});
-  });
-
-  $('#btn-1').click(() => {
-    let text = $('#cmd-1').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
-  });
-
-  $('#btn-2').click(() => {
-    let text = $('#cmd-2').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
-  });
-
-  $('#btn-3').click(() => {
-    let text = $('#cmd-3').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
-  });
-
-  $('#btn-4').click(() => {
-    let text = $('#cmd-4').val();
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'guilenh', giatri: text}});
+    send_cmd(password, 'thanhtruot', value);
   });
 
   //
@@ -39,9 +29,9 @@ $(document).ready(() => {
   //
 
   var joystick = nipplejs.create({
-        zone: document.getElementById('touchpad'),
-        color: 'blue',
-        size: 200,
+    zone: document.getElementById('touchpad'),
+    color: 'blue',
+    size: 200,
   });
 
   var tocdo = ['đứng yên', 'chầm chậm', 'vừa vừa', 'nhanh!']
@@ -60,24 +50,62 @@ $(document).ready(() => {
   }).on('move end', (event, nipple) => {
     $('#x').html(x);
     $('#y').html(y);
-    socket.emit('gui-lenh', {pass: $('#pass').val(), value: {lenh: 'joystick', giatri: {x: x, y: y, tocdo: parseInt($('#speed-range').val())}}});
+    send_cmd(password, 'joystick', {
+      x: x,
+      y: y,
+      tocdo: parseInt($('#speed-range').val())
+    });
   });
 
   //
   // code của password
   //
 
-  // $('#pass').focusout(() => {
-  //   socket.emit('tim-nguoi-than', $('#pass').val())
-  // });
+  var password = "";
 
-  setInterval(() => { socket.emit('tim-nguoi-than', $('#pass').val()) }, 5000);
+  setInterval(() => {
+    password = $('#pass').val();
+    socket.emit('tim-nguoi-than', password)
+  }, 5000);
 
   socket.on('tim-thay', () => {
     $('#status').html('Online <i class="fas fa-globe w3-text-green"></i>')
-  })
+  });
 
   socket.on('khong-tim-thay', () => {
     $('#status').html('Offline <i class="fas fa-globe w3-text-red"></i>')
-  })
+  });
+
+  //
+  // code của nút thêm bớt
+  //
+  var i = 0;
+
+  $('#add-cmd').click(() => {
+    i += 1;
+
+    const html = `
+    <div class="w3-row" id="cmd-row-${i}">
+      <div class="w3-col" style="width: auto;">
+        <input type="button" value="Nút ${i}" class="w3-button w3-red" id="btn-${i}"/>
+      </div>
+      <div class="w3-rest">
+        <input type="text" placeholder="Lệnh ${i}" class="w3-input w3-border" id="cmd-${i}" />
+      </div>
+    </div>`;
+    $('#cmd-box').append(html);
+
+    const index = i;
+    $(`#btn-${index}`).click(() => {
+      send_cmd(password, 'guilenh', $(`#cmd-${index}`).val());
+    });
+
+  }).click();
+
+  $('#remove-cmd').click(() => {
+    if (i > 0) {
+      $('#cmd-row-' + i).remove();
+      i -= 1;
+    }
+  });
 })

@@ -38,6 +38,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('gui-lenh', (data) => {
+    console.log(data)
     // console.log('Sending message:');
     // console.log(data.value);
 

@@ -35,39 +35,12 @@
         </div>
         <div class="w3-container">
             <h2>Điều khiển bằng giọng nói</h2>
-            <p>Nhận được: <span id="nhanduoc" class="w3-blue"></span></p>
-            <div class="w3-row">
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh gửi" class="w3-input w3-border" id="cmd-1" />
-                </div>
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh nói" class="w3-input w3-border" id="voice-1" />
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh gửi" class="w3-input w3-border" id="cmd-2" />
-                </div>
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh nói" class="w3-input w3-border" id="voice-2" />
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh gửi" class="w3-input w3-border" id="cmd-3" />
-                </div>
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh nói" class="w3-input w3-border" id="voice-3" />
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh gửi" class="w3-input w3-border" id="cmd-4" />
-                </div>
-                <div class="w3-col l6 m6 s6">
-                    <input type="text" placeholder="Lệnh nói" class="w3-input w3-border" id="voice-4" />
-                </div>
-            </div>
+            <p id="result"></p>
+            <div id="cmd-box"></div>
+            <p>
+              <input type="button" class="w3-button w3-blue" value="Thêm" id="add-cmd">
+              <input type="button" class="w3-button w3-red" value="Bớt" id="remove-cmd">
+            </p>
 
             <div id="command">
             </div>
@@ -75,69 +48,7 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
         <script src="jquery-3.4.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io();
-
-            // code password
-            setInterval(() => { socket.emit('tim-nguoi-than', $('#pass').val()) }, 5000);
-
-            socket.on('tim-thay', () => {
-                $('#status').html('Online <i class="fas fa-globe w3-text-green"></i>')
-            })
-
-            socket.on('khong-tim-thay', () => {
-                $('#status').html('Offline <i class="fas fa-globe w3-text-red"></i>')
-            })
-
-            if (annyang) {
-                // Let's define a command.
-                // var commands = {
-                //     '*words': (words) => { $('#command').append('<p>' + words + '</p>') }
-                // };
-
-                annyang.setLanguage("vi-VN");
-                annyang.debug();
-
-                // Add our commands to annyang
-                var add_commands = function () {
-
-                    var commands = {};
-                    commands[$('#voice-1').val()] =() => {
-                        var text = $('#cmd-1').val();
-                        socket.emit('gui-lenh', { pass: $('#pass').val(), value: { lenh: 'guilenh', giatri: text } });
-                        $('#nhanduoc').html($('#voice-1').val())
-                    };
-                    commands[$('#voice-2').val()] = () => {
-                        var text = $('#cmd-2').val();
-                        socket.emit('gui-lenh', { pass: $('#pass').val(), value: { lenh: 'guilenh', giatri: text } });
-                        $('#nhanduoc').html($('#voice-2').val())
-                    };
-                    commands[$('#voice-3').val()] = () => {
-                        var text = $('#cmd-3').val();
-                        socket.emit('gui-lenh', { pass: $('#pass').val(), value: { lenh: 'guilenh', giatri: text } });
-                        $('#nhanduoc').html($('#voice-3').val())
-                    };
-                    commands[$('#voice-4').val()] = () => {
-                        var text = $('#cmd-4').val();
-                        socket.emit('gui-lenh', { pass: $('#pass').val(), value: { lenh: 'guilenh', giatri: text } });
-                        $('#nhanduoc').html($('#voice-4').val())
-                    };
-                    commands['*words'] = (words) => {
-                        $('#nhanduoc').html(words)
-                    }
-
-                    annyang.addCommands(commands);
-                }
-
-                annyang.start();
-
-
-                $('#voice-1').focusout(add_commands);
-                $('#voice-2').focusout(add_commands);
-                $('#voice-3').focusout(add_commands);
-                $('#voice-4').focusout(add_commands);
-            }
-        </script>
+        <script src="voice.js"></script>
 </body>
 
 </html>
