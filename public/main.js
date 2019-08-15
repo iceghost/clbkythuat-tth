@@ -87,7 +87,7 @@ $(document).ready(() => {
     const html = `
     <div class="w3-row" id="cmd-row-${i}">
       <div class="w3-col" style="width: auto;">
-        <input type="button" value="Nút ${i}" class="w3-button w3-red" id="btn-${i}"/>
+        <input type="button" value="Nút ${i}" class="w3-button w3-red w3-border w3-border-red" id="btn-${i}"/>
       </div>
       <div class="w3-rest">
         <input type="text" placeholder="Lệnh ${i}" class="w3-input w3-border" id="cmd-${i}" />

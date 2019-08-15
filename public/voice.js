@@ -75,7 +75,7 @@ $(document).ready(() => {
     const html = `
   <div class="w3-row" id="cmd-row-${i}">
     <div class="w3-col" style="width: auto">
-      <input type="button" value="Gửi" class="w3-button w3-red" id="btn-${i}" />
+      <input type="button" value="Gửi" class="w3-button w3-red w3-border w3-border-red" id="btn-${i}" />
     </div>
     <div class="w3-rest w3-row">
         <div class="w3-col l6 m6 s6">

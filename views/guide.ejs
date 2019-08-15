@@ -14,9 +14,6 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/languages/arduino.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="main.js"></script>
 </head>
 
 <body>
@@ -42,18 +39,24 @@
         <li><a href="https://github.com/bblanchon/ArduinoJson">ArduinoJson</a></li>
       </ul>
       <h1 id="example">Code mẫu</h1>
-      <p>Các đoạn quan trọng hoặc cần được điều chỉnh ở những chỗ màu xanh lá</p>
+      <p>Các đoạn quan trọng được chú thích ở những chỗ màu xanh lá</p>
       <pre>
-<code class="arduino">#include &lt;Arduino.h&gt;
-#include &lt;ESP8266WiFi.h&gt;
+<code class="arduino">#include &lt;ESP8266WiFi.h&gt;
 #include &lt;ArduinoJson.h&gt;
 #include &lt;SocketIoClient.h&gt;
 
-SocketIoClient socket;
+// Khai báo chân của bánh xe, A là trái, B là phải
+const int AIN1 = D5;
+const int AIN2 = D6;
+const int BIN1 = D7;
+const int BIN2 = D8;
 
+// Khai báo tệp JSON
 const int capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 40;
 StaticJsonDocument&lt;capacity&gt; json;
 
+// Khai báo kết nối tới socket server
+SocketIoClient socket;
 const char * host = "clbkythuattanthonghoi.herokuapp.com";
 const int port = 80;
 
@@ -62,46 +65,76 @@ void setup() {
   Serial.begin(115200);
 
   // Đổi tên và mật khẩu WiFi tại đây:
-  WiFi.begin("xxxxxxxx", "xxxxxxxx");
+  // WiFi.begin("ten WiFi", "mat khau WiFi");
+  WiFi.begin("Vi_Tinh 02", "12345678");
 
+  // Chờ kết nối
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
 
+  // In ra địa chỉ IP
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+  // Mỗi khi nhận được sự kiện "gui-lenh" thì gọi thủ tục xử lý "event"
   socket.on("gui-lenh", event);
 
+  // Mỗi khi nhận được sự kiện "connect" (khi kết nối tới server)
+  // thì gọi lệnh xử lý này (đăng nhập tới server)
   socket.on("connect", [](const char * payload, size_t length) {
     // Đổi mật khẩu của con ESP tại đây: (càng bảo mật càng tốt)
-    socket.emit("dang-nhap", "\"123456\"");
+    socket.emit("dang-nhap", "\"12345678\"");
   });
+
+  // Bắt đầu kết nối tới socket server
   socket.begin(host, port);
 }
 
 
 void loop() {
+  // Lắng nghe sự kiện từ server
   socket.loop();
 }
 
-
+/* Thủ tục xử lý "event"
+ * Dữ liệu gửi về sẽ có dạng JSON
+ * {
+ *  lenh: ...
+ *  giatri: ...
+ * }
+ */
 void event(const char * payload, size_t length) {
+  // Giải mã JSON
   deserializeJson(json, payload);
+
+  // Lấy giá trị của "lenh" trong JSON
   String lenh = json["lenh"];
 
-  if (lenh == "guilenh"){
+  // Nếu lệnh được gửi từ các nút lệnh thì lệnh là "guilenh"
+  if (lenh == "guilenh") {
     String giatri = json["giatri"];
 
-    // Xử lý nút gửi lệnh tại đây:
+    // Xử lý giá trị lệnh tại đây
+    if (giatri == "toi"){
+      out(512, 512);
+    }
+    else if (giatri == "lui"){
+      out(-512, -512);
+    }
+    else if (giatri == "dung"){
+      out(0, 0);
+    }
+
     Serial.print("Nhan duoc lenh: ");
     Serial.println(giatri);
   }
 
-  else if (lenh == "thanhtruot"){
+  // Nếu lệnh được gửi từ thanh trượt thì lệnh là "thanhtruot"
+  else if (lenh == "thanhtruot") {
     int giatri = json["giatri"];
 
     // Xử lý giá trị thanh trượt tại đây:
@@ -109,12 +142,38 @@ void event(const char * payload, size_t length) {
     Serial.println(giatri);
   }
 
-  else if (lenh == "joystick"){
+  // Nếu lệnh được gửi từ touchpad thì lệnh là "joystick"
+  else if (lenh == "joystick") {
     int x = json["giatri"]["x"];
     int y = json["giatri"]["y"];
     int tocdo = json["giatri"]["tocdo"];
 
     // Xử lý tọa độ x, y, tốc độ tại đây:
+    // Biến tốc độ từ 0 -&gt; 3 thành từ 0 -&gt; 1023
+    tocdo = map(tocdo, 0, 3, 0, 1023);
+
+    if (y &gt; 0 and y &lt;= 100) {
+      // Chạy tới
+      out(tocdo, tocdo);
+    }
+    else if (y == 0)  {
+      // Đứng yên
+      out(0, 0);
+    }
+    else {
+      // Chạy lùi
+      out(-tocdo, -tocdo);
+    }
+
+    if (x &gt; 50 and x &lt;= 100) {
+      // rẽ phải
+      outRight(0);
+    }
+    else if (x &lt; -50 and x &gt;= -100) {
+      // rẽ trái
+      outLeft(0);
+    }
+
     Serial.print("x = ");
     Serial.print(x);
     Serial.print(" y = ");
@@ -122,6 +181,35 @@ void event(const char * payload, size_t length) {
     Serial.print(" tocdo = ");
     Serial.println(tocdo);
   }
+}
+
+
+// Hàm điều khiển bánh trái
+void outLeft(int lspeed){
+  if (lspeed &gt;= 0){
+    analogWrite(AIN1, lspeed);
+    digitalWrite(AIN2, LOW);
+  } else {
+    digitalWrite(AIN1, LOW);
+    analogWrite(AIN2, abs(lspeed));
+  }
+}
+
+// Hàm điều khiển bánh phải
+void outRight(int rspeed){
+  if (rspeed &gt;= 0){
+    analogWrite(BIN1, rspeed);
+    digitalWrite(BIN2, LOW);
+  } else {
+    digitalWrite(BIN1, LOW);
+    analogWrite(BIN2, abs(rspeed));
+  }
+}
+
+// Hàm điều khiển cả hai bánh
+void out(int lspeed, int rspeed){
+  outLeft(lspeed);
+  outRight(rspeed);
 }</code>
       </pre>
     </div>
