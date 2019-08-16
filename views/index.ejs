@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
   <link rel="stylesheet" href="w3.css">
+  <link rel="stylesheet" href="style.css">
   <link rel="shortcut icon" href="favicon.ico">
   <script src="https://kit.fontawesome.com/f8ff5afc76.js"></script>
 
@@ -31,7 +32,7 @@
         <p>Password: </p>
       </div>
       <div class="w3-container w3-rest">
-        <input type="password" class="w3-input" id="pass"/>
+        <input type="password" class="w3-input" id="pass" />
       </div>
     </div>
     <!-- Trạng thái ESP -->
@@ -43,12 +44,36 @@
       <div class="w3-half w3-container">
         <h1>Bảng điều khiển</h1>
         <p>Gửi lệnh:</p>
-        <!-- Dãy lệnh -->
-        <div id="cmd-box"></div>
+        <!-- Thêm/bớt lệnh -->
         <p>
-          <input type="button" class="w3-button w3-blue" value="Thêm" id="add-cmd">
+          <div class="w3-dropdown-hover">
+            <button class="w3-button w3-blue">Thêm <i class="fas fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card">
+              <button class="w3-bar-item w3-button add-cmd-button" data-cmd="" id="add-cmd">Thêm mới</button>
+              <div class="w3-dropdown-hover">
+                <button class="w3-bar-item w3-button w3-blue"><span>Đèn <i class="fas fa-caret-right"></i></span></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card">
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-1-mo">Mở đèn 1</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-1-tat">Tắt đèn 1</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-2-mo">Mở đèn 2</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-2-tat">Tắt đèn 2</button>
+                </div>
+              </div>
+              <div class="w3-dropdown-hover">
+                <button class="w3-bar-item w3-button w3-red">Xe <i class="fas fa-caret-right"></i></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card">
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="toi">Xe chạy tới</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="lui">Xe chạy lùi</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="trai">Xe rẽ trái</button>
+                  <button class="w3-bar-item w3-button add-cmd-button" data-cmd="phai">Xe rẽ phải</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <input type="button" class="w3-button w3-red" value="Bớt" id="remove-cmd">
         </p>
+        <!-- Dãy lệnh -->
+        <div id="cmd-box"></div>
         <!-- Thanh trượt -->
         <p>Thanh trượt: <span id="angle"></span></p>
         <input type="range" min=0 max=360 value=0 style="width: 100%" id="slider-range" />

@@ -81,7 +81,7 @@ $(document).ready(() => {
   //
   var i = 0;
 
-  $('#add-cmd').click(() => {
+  $('.add-cmd-button').click(function() {
     i += 1;
 
     const html = `
@@ -90,7 +90,7 @@ $(document).ready(() => {
         <input type="button" value="Nút ${i}" class="w3-button w3-red w3-border w3-border-red" id="btn-${i}"/>
       </div>
       <div class="w3-rest">
-        <input type="text" placeholder="Lệnh ${i}" class="w3-input w3-border" id="cmd-${i}" />
+        <input type="text" placeholder="Lệnh ${i}" class="w3-input w3-border" id="cmd-${i}" value="${$(this).data().cmd}"/>
       </div>
     </div>`;
     $('#cmd-box').append(html);
@@ -100,7 +100,9 @@ $(document).ready(() => {
       send_cmd(password, 'guilenh', $(`#cmd-${index}`).val());
     });
 
-  }).click();
+  });
+
+  $('#add-cmd').click();
 
   $('#remove-cmd').click(() => {
     if (i > 0) {

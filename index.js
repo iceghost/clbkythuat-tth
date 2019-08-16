@@ -30,10 +30,13 @@ io.on("connection", (socket) => {
   socket.on('dang-nhap', (data) => {
     // console.log('Login from ' + socket.id)
     let index = login.map(value => value.pass).indexOf(data);
-    if (index >= 0){
+    if (index >= 0) {
       login.splice(index, 1);
     }
-    login.push({pass: data.toString(), id: socket.id})
+    login.push({
+      pass: data.toString(),
+      id: socket.id
+    })
     // console.log(login)
   });
 
@@ -47,7 +50,7 @@ io.on("connection", (socket) => {
 
     // console.log(' to ' + login[index].id);
 
-    if (index >= 0){
+    if (index >= 0) {
       id = login[index].id;
     }
     socket.broadcast.to(id).emit('gui-lenh', data.value); // gửi đến socket có id trong JSON login
@@ -55,7 +58,7 @@ io.on("connection", (socket) => {
 
   socket.on('disconnect', () => {
     let index = login.map(value => value.id).indexOf(socket.id);
-    if (index >= 0){
+    if (index >= 0) {
       login.splice(index, 1);
     }
   });
@@ -63,7 +66,7 @@ io.on("connection", (socket) => {
   socket.on('tim-nguoi-than', (data) => {
     // console.log('tim ' + data + ' trong mang login...')
     // console.log(login.map(value => value.pass))
-    if (login.map(value => value.pass).indexOf(data) >= 0){
+    if (login.map(value => value.pass).indexOf(data) >= 0) {
       socket.emit('tim-thay');
     } else socket.emit('khong-tim-thay');
   });

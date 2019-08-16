@@ -69,7 +69,7 @@ $(document).ready(() => {
   //
   var i = 0;
 
-  $('#add-cmd').click(() => {
+  $('.add-cmd-button').click(function() {
     i += 1;
 
     const html = `
@@ -79,10 +79,10 @@ $(document).ready(() => {
     </div>
     <div class="w3-rest w3-row">
         <div class="w3-col l6 m6 s6">
-            <input type="text" placeholder="Lệnh gửi ${i}" class="w3-input w3-border" id="cmd-${i}" />
+            <input type="text" placeholder="Lệnh gửi ${i}" class="w3-input w3-border" id="cmd-${i}" value="${$(this).data().cmd}"/>
         </div>
         <div class="w3-col l6 m6 s6">
-            <input type="text" placeholder="Lệnh nói ${i}" class="w3-input w3-border" id="voice-${i}" />
+            <input type="text" placeholder="Lệnh nói ${i}" class="w3-input w3-border" id="voice-${i}" value="${$(this).data().voice}" />
         </div>
     </div>
   </div>`;
@@ -92,9 +92,11 @@ $(document).ready(() => {
     $(`#btn-${index}`).click(() => {
       send_cmd(password, 'guilenh', $(`#cmd-${index}`).val());
     });
-    $(`#voice-${index}`).focusout(add_commands);
+    $(`#voice-${index}`).focusout(add_commands).focusout();
 
-  }).click();
+  });
+
+  $('#add-cmd').click();
 
   $('#remove-cmd').click(() => {
     if (i > 0) {

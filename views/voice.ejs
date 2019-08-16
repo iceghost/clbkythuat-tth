@@ -2,53 +2,79 @@
 <html>
 
 <head>
-    <title>Trang chủ</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Trang chủ</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 
-    <link rel="stylesheet" href="w3.css">
-    <link rel="shortcut icon" href="favicon.ico">
-    <script src="https://kit.fontawesome.com/f8ff5afc76.js"></script>
+  <link rel="stylesheet" href="w3.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="favicon.ico">
+  <script src="https://kit.fontawesome.com/f8ff5afc76.js"></script>
 
-    <script src="jquery-3.4.1.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+  <script src="jquery-3.4.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-    <div class="w3-bar w3-blue">
-        <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
-        <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
-        <a href="/voice" class="w3-bar-item w3-button w3-mobile">Giọng nói</a>
+  <div class="w3-bar w3-blue">
+    <a href="/" class="w3-bar-item w3-button w3-mobile">Trang chủ</a>
+    <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
+    <a href="/voice" class="w3-bar-item w3-button w3-mobile">Giọng nói</a>
+  </div>
+  <div class="w3-container">
+    <div class="w3-row">
+      <div class="w3-container w3-col" style="width: auto;">
+        <p>Password: </p>
+      </div>
+      <div class="w3-container w3-rest">
+        <input type="password" class="w3-input" id="pass" />
+      </div>
     </div>
     <div class="w3-container">
-        <div class="w3-row">
-            <div class="w3-container w3-col" style="width: auto;">
-                <p>Password: </p>
+      <h2>Trạng thái: </h2>
+      <p>ESP <span id="status">Offline <i class="fas fa-globe w3-text-red"></i><span></p>
+    </div>
+    <div class="w3-container">
+      <h2>Điều khiển bằng giọng nói</h2>
+      <!-- Thêm/bớt lệnh -->
+      <p>
+        <div class="w3-dropdown-hover">
+          <button class="w3-button w3-blue">Thêm <i class="fas fa-caret-down"></i></button>
+          <div class="w3-dropdown-content w3-bar-block w3-card">
+            <button class="w3-bar-item w3-button add-cmd-button" data-cmd="" data-voice="" id="add-cmd">Thêm mới</button>
+            <div class="w3-dropdown-hover">
+              <button class="w3-bar-item w3-button w3-blue"><span>Đèn <i class="fas fa-caret-right"></i></span></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card">
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-1-mo" data-voice="Mở đèn 1">Mở đèn 1</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-1-tat" data-voice="Tắt đèn 1">Tắt đèn 1</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-2-mo" data-voice="Mở đèn 2">Mở đèn 2</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="led-2-tat" data-voice="Tắt đèn 2">Tắt đèn 2</button>
+              </div>
             </div>
-            <div class="w3-container w3-rest">
-                <input type="password" class="w3-input" id="pass" />
+            <div class="w3-dropdown-hover">
+              <button class="w3-bar-item w3-button w3-red">Xe <i class="fas fa-caret-right"></i></button>
+              <div class="w3-dropdown-content w3-bar-block w3-card">
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="toi" data-voice="Xe chạy tới">Xe chạy tới</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="lui" data-voice="Xe chạy lùi">Xe chạy lùi</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="trai" data-voice="Xe rẽ trái">Xe rẽ trái</button>
+                <button class="w3-bar-item w3-button add-cmd-button" data-cmd="phai" data-voice="Xe rẽ phải">Xe rẽ phải</button>
+              </div>
             </div>
+          </div>
         </div>
-        <div class="w3-container">
-            <h2>Trạng thái: </h2>
-            <p>ESP <span id="status">Offline <i class="fas fa-globe w3-text-red"></i><span></p>
-        </div>
-        <div class="w3-container">
-            <h2>Điều khiển bằng giọng nói</h2>
-            <p id="result"></p>
-            <div id="cmd-box"></div>
-            <p>
-              <input type="button" class="w3-button w3-blue" value="Thêm" id="add-cmd">
-              <input type="button" class="w3-button w3-red" value="Bớt" id="remove-cmd">
-            </p>
+        <input type="button" class="w3-button w3-red" value="Bớt" id="remove-cmd">
+      </p>
+      <p id="result"></p>
+      <div id="cmd-box"></div>
 
-            <div id="command">
-            </div>
-        </div>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-        <script src="jquery-3.4.1.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="voice.js"></script>
+
+      <div id="command">
+      </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="voice.js"></script>
 </body>
 
 </html>
