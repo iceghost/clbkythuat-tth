@@ -68,8 +68,9 @@ $(document).ready(() => {
     socket.emit('tim-nguoi-than', password)
   }, 5000);
 
-  socket.on('tim-thay', () => {
+  socket.on('tim-thay', (obj) => {
     $('#status').html('Online <i class="fas fa-globe w3-text-green"></i>')
+    $('#log').html(obj.log.map(mess => mess.time + ": " + mess.content).join("<br/>"));
   });
 
   socket.on('khong-tim-thay', () => {

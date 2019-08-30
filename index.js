@@ -26,17 +26,17 @@ var login = []; // Danh sách những arduino đăng nhập, login[...].id = id 
 
 io.on("connection", (socket) => {
   // Arduino đăng nhập tại đây
-  socket.emit('Hello');
   socket.on('dang-nhap', (data) => {
     // console.log('Login from ' + socket.id)
-    let index = login.map(value => value.pass).indexOf(data);
+    var index = login.map(value => value.pass).indexOf(data);
     if (index >= 0) {
       login.splice(index, 1);
     }
     login.push({
       pass: data.toString(),
-      id: socket.id
-    })
+      id: socket.id,
+      log: [],
+    });
     // console.log(login)
   });
 
@@ -45,8 +45,8 @@ io.on("connection", (socket) => {
     // console.log('Sending message:');
     // console.log(data.value);
 
-    let id = '';
-    let index = login.map(value => value.pass).indexOf(data.pass);
+    var id = '';
+    var index = login.map(value => value.pass).indexOf(data.pass);
 
     // console.log(' to ' + login[index].id);
 
@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('disconnect', () => {
-    let index = login.map(value => value.id).indexOf(socket.id);
+    var index = login.map(value => value.id).indexOf(socket.id);
     if (index >= 0) {
       login.splice(index, 1);
     }
@@ -66,9 +66,18 @@ io.on("connection", (socket) => {
   socket.on('tim-nguoi-than', (data) => {
     // console.log('tim ' + data + ' trong mang login...')
     // console.log(login.map(value => value.pass))
-    if (login.map(value => value.pass).indexOf(data) >= 0) {
-      socket.emit('tim-thay');
+    var index = login.map(value => value.pass).indexOf(data);
+    if (index >= 0) {
+      socket.emit('tim-thay', login[index]);
     } else socket.emit('khong-tim-thay');
+  });
+
+  socket.on('log', (data) => {
+    var index = login.map(value => value.id).indexOf(socket.id); // tìm số thứ tự của esp8266 trong mảng login
+    if (index >= 0) {
+      var now = new Date();
+      login[index].log.push({time: now, content: data});
+    }
   });
 });
 
