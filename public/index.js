@@ -69,12 +69,12 @@ $(document).ready(() => {
   }, 5000);
 
   socket.on('tim-thay', (obj) => {
-    $('#status').html('Online <i class="fas fa-globe w3-text-green"></i>')
+    $('#status').html('online <i class="fas fa-globe"></i>').removeClass('w3-red').addClass('w3-green');
     $('#log').html(obj.log.map(mess => mess.time + ": " + mess.content).join("<br/>"));
   });
 
   socket.on('khong-tim-thay', () => {
-    $('#status').html('Offline <i class="fas fa-globe w3-text-red"></i>')
+    $('#status').html('offline <i class="fas fa-globe"></i>').removeClass('w3-green').addClass('w3-red');
   });
 
   //

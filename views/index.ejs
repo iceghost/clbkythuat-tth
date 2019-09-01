@@ -15,7 +15,7 @@
   <!-- Các file JS -->
   <script src="./jquery-3.4.1.min.js"></script>
   <script src="./socket.io/socket.io.js"></script>
-  <script src="./main.js"></script>
+  <script src="./index.js"></script>
   <script src="./nipplejs.js"></script>
 </head>
 
@@ -39,9 +39,9 @@
     </div>
     <!-- Trạng thái ESP -->
     <div class="w3-container">
-      <h2>Trạng thái: </h2>
-      <p>ESP <span id="status">Offline <i class="fas fa-globe w3-text-red"></i><span></p>
+      <h3>Trạng thái: <span class="w3-red w3-round-large w3-padding" id="status">offline <i class="fas fa-globe"></i></span></h3>
     </div>
+    <!-- Khung điều khiển -->
     <div class="w3-row">
       <div class="w3-half w3-container">
         <h1>Bảng điều khiển</h1>
@@ -91,7 +91,7 @@
       </div>
     </div>
     <h1>ESP8266 Log</h1>
-    <pre class="w3-code w3-pale-green" id="log"></pre>
+    <pre class="w3-code w3-pale-green" id="log" style="height: 500px; overflow-y: scroll;"></pre>
   </div>
 </body>
 
