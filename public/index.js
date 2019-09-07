@@ -68,13 +68,12 @@ $(document).ready(() => {
     socket.emit('tim-nguoi-than', password)
   }, 5000);
 
-  socket.on('tim-thay', (obj) => {
-    $('#status').html('online <i class="fas fa-globe"></i>').removeClass('w3-red').addClass('w3-green');
-    $('#log').html(obj.log.map(mess => mess.time + ": " + mess.content).join("<br/>"));
-  });
-
-  socket.on('khong-tim-thay', () => {
-    $('#status').html('offline <i class="fas fa-globe"></i>').removeClass('w3-green').addClass('w3-red');
+  socket.on('ket-qua', (obj) => {
+    if (obj) {
+      $('#status').html('online <i class="fas fa-globe"></i>').removeClass('w3-red').addClass('w3-green');
+      $('#log').html(obj.log.map(mess => mess.time + ": " + mess.content).join("<br/>"));
+    }
+    else $('#status').html('offline <i class="fas fa-globe"></i>').removeClass('w3-green').addClass('w3-red');
   });
 
   //
@@ -82,7 +81,7 @@ $(document).ready(() => {
   //
   var i = 0;
 
-  $('.add-cmd-button').click(function() {
+  $('.add-cmd-button').click(function () {
     i += 1;
 
     const html = `

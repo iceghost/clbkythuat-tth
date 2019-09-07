@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width">
+    <title>Tân Thông IOT</title>
+    <link rel="stylesheet" href="./w3.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="./fontawesome.js"></script>
+    <script src="./nipplejs.js"></script>
+    <script src="./annyang.min.js"></script>
+    <script src="./socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <header class="w3-blue w3-card">
+        <a href="/" class="w3-cell w3-btn w3-green w3-xxlarge">T2IOT</a>
+        <nav class="w3-cell w3-cell-middle">
+            <a href="/guide" class="w3-btn">Hướng dẫn</a>
+            <a href="/voice" class="w3-btn">Giọng nói</a>
+            <a href="/new" class="w3-btn">Trang mới</a>
+        </nav>
+    </header>
+    <main class="w3-row-padding w3-stretch" id="app">
+        <!-- Nửa trái -->
+        <div class="w3-half" id="buttons">
+            <section class="w3-panel w3-card w3-padding">
+                <h3>Mật khẩu</h3>
+                <input type="password" class="w3-input" v-model="password">
+                <p>Status:
+                    <span v-if="esp" class="w3-green w3-tag w3-card">Online</span>
+                    <span v-else class="w3-red w3-tag w3-card">Offline</span>
+                </p>
+            </section>
+
+            <section class="w3-panel w3-card w3-padding">
+                <h3>Gửi lệnh</h3>
+                <input type="checkbox" v-model="toggleVoice" id="toggle-voice">
+                <label for="toggle-voice"> Điều khiển bằng giọng nói</label>
+                <p v-if="toggleVoice">Nghe thấy: <span :class="(voiceAlert[0]) ? 'w3-green' : 'w3-red'" class="w3-tag" v-html="voiceAlert[1]"></span></p>
+                <div v-for="(button, index) in buttons" :key="index">
+                    <div class="w3-cell-row">
+                        <input type="text" class="w3-input" :class="{'w3-col s6 m6 l6': toggleVoice}"
+                            :placeholder="'Lệnh ' + (index + 1)" v-model.trim="buttons[index][0]">
+                        <input v-if="toggleVoice" type="text" class="w3-input w3-col s6 m6 l6"
+                            :placeholder="'Lệnh nói ' + (index + 1)" v-model.trim="buttons[index][1]">
+                    </div>
+                    <button class="w3-btn w3-blue w3-right" @click="send_cmd(password, 'guilenh', buttons[index][0])">
+                        <i class="far fa-paper-plane"></i> Gửi
+                    </button>
+                    <button class="w3-btn w3-text-blue w3-right" @click="buttons.splice(index, 1)">
+                        <b>&times;</b>
+                    </button>
+                </div>
+
+                <div class="w3-bar w3-margin-bottom">
+                    <select class="w3-bar-item w3-border" v-model='newCommand'>
+                        <option value="-1" disabled>&plus; Thêm lệnh</option>
+                        <option v-for="(command, index) in commands" :key="index" v-html="command[1]" :value="index">
+                        </option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="w3-panel w3-card w3-padding">
+                <h3>ESP Log</h3>
+                <input type="checkbox" v-model="timeFormat" id="time-format">
+                <label for="time-format"> Thời gian</label>
+                <div class="w3-leftbar w3-border-blue w3-pale-blue" style="height: 10em; overflow-y: scroll;">
+                    <!-- YYYY-MM-DDTHH:MM:SS.MSSZ -->
+                    <div v-if="esp" v-html="esp.log.map(mess =>
+                        ((timeFormat)? mess.time.slice(-13, -5) + ': ' : '') + mess.content
+                    ).join('<br/>')"></div>
+                </div>
+            </section>
+        </div>
+        <!-- Nửa phải -->
+        <div class="w3-half">
+            <section class="w3-panel w3-card w3-padding">
+                <h3>Touchpad</h3>
+                <p><b>Tốc độ</b>: <span v-html="t_speed[speed]"></span></p>
+                <input type="range" min=0 max=3 v-model="speed">
+                <p><b>Tọa độ</b>: x = <span v-html="joystick.x"></span>, y = <span v-html="joystick.y"></span></p>
+                <div id="touchpad" style="width: 100%; height: 250px; position: relative; background-color: lightgray">
+                </div>
+            </section>
+
+            <section class="w3-panel w3-card w3-padding">
+                <h3>Thanh trượt</h3>
+                <div v-for="(slider, index) in sliders" class="w3-panel w3-display-container w3-card" :key="index">
+                    <button class="w3-btn w3-blue w3-display-topright"
+                        @click="sliders.splice(index, 1)"><b>&times;</b></button>
+                    <p><b>Giá trị</b>: <span v-html="sliders[index].value"></span></p>
+                    <input type="range" class="w3-input" v-model.number="sliders[index].value" :min="sliders[index].min"
+                        :max="sliders[index].max" :step="sliders[index].step">
+                    <label class="w3-col s4 m4 l4 w3-left-align"><b>Đầu</b></label>
+                    <label class="w3-col s4 m4 l4 w3-center"><b>Bước</b></label>
+                    <label class="w3-col s4 m4 l4 w3-right-align"><b>Cuối</b></label>
+                    <div class="w3-col s4 m4 l4">
+                        <input type="number" class="w3-input w3-border-0 w3-left-align"
+                            v-model.number="sliders[index].min">
+                    </div>
+                    <div class="w3-col s4 m4 l4">
+                        <input type="number" class="w3-input w3-border-0 w3-center"
+                            v-model.number="sliders[index].step">
+                    </div>
+                    <div class="w3-col s4 m4 l4">
+                        <input type="number" class="w3-input w3-border-0 w3-right-align"
+                            v-model.number="sliders[index].max">
+                    </div>
+                </div>
+                <button class="w3-btn w3-blue" @click="sliders.push({min:0,step:1,max:100,value:0})">&plus; Thêm thanh
+                    trượt</button>
+            </section>
+
+        </div>
+    </main>
+    <script>
+        var socket = io();
+        var app = new Vue({
+            el: '#app',
+            data: {
+                buttons: [['', '']],
+                sliders: [],
+                password: '',
+                newCommand: -1,
+                commands: [
+                    ['', 'Trống'],
+                    ['tat-led-1', 'Tắt đèn 1'],
+                    ['mo-led-1', 'Mở đèn 1'],
+                    ['tat-led-2', 'Tắt đèn 2'],
+                    ['mo-led-2', 'Mở đèn 2'],
+                    ['toi', 'Xe đi tới'],
+                    ['lui', 'Xe đi lui'],
+                    ['trai', 'Xe rẽ trái'],
+                    ['phai', 'Xe rẽ phải'],
+                    ['dung', 'Xe dừng lại'],
+                ],
+                t_speed: ['đứng yên', 'chầm chậm', 'vừa vừa', 'nhanh!'],
+                speed: 0,
+                joystick: { x: 0, y: 0 },
+                esp: null,
+                timeFormat: false,
+                toggleVoice: false,
+                voiceAlert: [false, ''],
+            },
+            methods: {
+                send_cmd(pass, cmd, val) {
+                    socket.emit('gui-lenh', { pass: pass, value: { lenh: cmd, giatri: val } });
+                },
+            },
+            mounted() {
+                // 'Cookies'
+                if (localStorage.buttons) this.buttons = JSON.parse(localStorage.buttons);
+                if (localStorage.sliders) this.sliders = JSON.parse(localStorage.sliders);
+                // Touchpad
+                var touchpad = nipplejs.create({
+                    zone: document.getElementById('touchpad'),
+                    color: 'blue',
+                    size: 200,
+                }).on('move', (event, nipple) => {
+                    this.joystick.x = Math.round(nipple.instance.frontPosition.x);
+                    this.joystick.y = Math.round(nipple.instance.frontPosition.y) * (-1);
+                }).on('end', (event, nipple) => {
+                    this.joystick.x = 0;
+                    this.joystick.y = 0;
+                });
+                // Mật khẩu
+                setInterval(() => { socket.emit('tim-nguoi-than', this.password); }, 5000);
+                socket.on('ket-qua', (obj) => { this.esp = obj; });
+                // Giọng nói
+                annyang.setLanguage("vi-VN");
+                annyang.debug();
+                annyang.addCallback('resultNoMatch', (phrases) => {
+                    this.$set(this.voiceAlert, 0, false);
+                    this.$set(this.voiceAlert, 1, phrases.join(', '));
+                });
+                annyang.addCallback('resultMatch', (user_said, command_text, phrases) => {
+                    this.$set(this.voiceAlert, 0, true);
+                    this.$set(this.voiceAlert, 1, user_said);
+                });
+            },
+            watch: {
+                buttons: {
+                    handler() {
+                        // Lưu cookies 
+                        localStorage.buttons = JSON.stringify(this.buttons);
+                        // Thêm lệnh nói
+                        var commands = {};
+                        this.buttons.forEach(button => {
+                            commands[button[1]] = () => {
+                                this.send_cmd(this.password, 'guilenh', button[0]);
+                            };
+                        });
+                        annyang.removeCommands();
+                        annyang.addCommands(commands);
+                    }, deep: true,
+                },
+                sliders: {
+                    handler() {
+                        localStorage.sliders = JSON.stringify(this.sliders);
+                    }, deep: true,
+                },
+                newCommand() {
+                    this.buttons.push(this.commands[this.newCommand]);
+                },
+                joystick: {
+                    handler() {
+                        this.send_cmd(this.password, 'joystick', { x: this.joystick.x, y: this.joystick.y, tocdo: parseInt(this.speed) });
+                    }, deep: true
+                },
+                toggleVoice() {
+                    if (this.toggleVoice){
+                        annyang.start();
+                    }
+                    else annyang.abort();
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

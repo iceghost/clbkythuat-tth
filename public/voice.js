@@ -18,12 +18,9 @@ $(document).ready(() => {
     socket.emit('tim-nguoi-than', password);
   }, 5000);
 
-  socket.on('tim-thay', () => {
-    $('#status').html('Online <i class="fas fa-globe w3-text-blue"></i>')
-  });
-
-  socket.on('khong-tim-thay', () => {
-    $('#status').html('Offline <i class="fas fa-globe w3-text-red"></i>')
+  socket.on('ket-qua', (obj) => {
+    if (obj) $('#status').html('Online <i class="fas fa-globe w3-text-blue"></i>');
+    else $('#status').html('offline <i class="fas fa-globe"></i>').removeClass('w3-green').addClass('w3-red');
   });
 
   if (annyang) {

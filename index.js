@@ -19,7 +19,11 @@ app.get('/guide', (req, res) => {
 
 app.get('/voice', (req, res) => {
   res.render('voice');
-})
+});
+
+app.get('/new', (req, res) => {
+  res.render('new');
+});
 
 var login = []; // Danh sách những arduino đăng nhập, login[...].id = id của socket
 // Nếu pass bị trùng thì hỏng hết :))
@@ -40,7 +44,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('gui-lenh', (data) => {
-    // console.log(data)
+    console.log(data)
     var index = login.map(value => value.pass).indexOf(data.pass);
     if (index >= 0) {
       socket.broadcast.to(login[index].id).emit('gui-lenh', data.value); // gửi đến socket có id trong JSON login
@@ -57,9 +61,9 @@ io.on("connection", (socket) => {
   socket.on('tim-nguoi-than', (data) => {
     var index = login.map(value => value.pass).indexOf(data);
     if (index >= 0) {
-      socket.emit('tim-thay', login[index]);
+      socket.emit('ket-qua', login[index]);
     } 
-    else socket.emit('khong-tim-thay');
+    else socket.emit('ket-qua', null);
   });
 
   socket.on('log', (data) => {
