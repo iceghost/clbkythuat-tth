@@ -35,7 +35,8 @@
                 <h3>Gửi lệnh</h3>
                 <input type="checkbox" v-model="toggleVoice" id="toggle-voice">
                 <label for="toggle-voice"> Điều khiển bằng giọng nói</label>
-                <p v-if="toggleVoice">Nghe thấy: <span :class="(voiceAlert[0]) ? 'w3-green' : 'w3-red'" class="w3-tag" v-html="voiceAlert[1]"></span></p>
+                <p v-if="toggleVoice">Nghe thấy: <span :class="(voiceAlert[0]) ? 'w3-green' : 'w3-red'"
+                        class="w3-tag">{{ voiceAlert[1] }}</span></p>
                 <div v-for="(button, index) in buttons" :key="index">
                     <div class="w3-cell-row">
                         <input type="text" class="w3-input" :class="{'w3-col s6 m6 l6': toggleVoice}"
@@ -54,7 +55,8 @@
                 <div class="w3-bar w3-margin-bottom">
                     <select class="w3-bar-item w3-border" v-model='newCommand'>
                         <option value="-1" disabled>&plus; Thêm lệnh</option>
-                        <option v-for="(command, index) in commands" :key="index" v-html="command[1]" :value="index">
+                        <option v-for="(command, index) in commands" :key="index" :value="index">
+                            {{ command[1] }}
                         </option>
                     </select>
                 </div>
@@ -66,9 +68,9 @@
                 <label for="time-format"> Thời gian</label>
                 <div class="w3-leftbar w3-border-blue w3-pale-blue" style="height: 10em; overflow-y: scroll;">
                     <!-- YYYY-MM-DDTHH:MM:SS.MSSZ -->
-                    <div v-if="esp" v-html="esp.log.map(mess =>
-                        ((timeFormat)? mess.time.slice(-13, -5) + ': ' : '') + mess.content
-                    ).join('<br/>')"></div>
+                    <div v-if="esp">
+                        {{ esp.log.map(mess => ((timeFormat)? mess.time.slice(-13, -5) + ': ' : '') + mess.content).join('<br/>')" }}
+                    </div>
                 </div>
             </section>
         </div>
@@ -76,9 +78,9 @@
         <div class="w3-half">
             <section class="w3-panel w3-card w3-padding">
                 <h3>Touchpad</h3>
-                <p><b>Tốc độ</b>: <span v-html="t_speed[speed]"></span></p>
+                <p><b>Tốc độ</b>: <span>{{ t_speed[speed] }}</span></p>
                 <input type="range" min=0 max=3 value=0 v-model.number="speed">
-                <p><b>Tọa độ</b>: x = <span v-html="joystick.x"></span>, y = <span v-html="joystick.y"></span></p>
+                <p><b>Tọa độ</b>: x = <span>{{ joystick.x }}</span>, y = <span>{{ joystick.y }}</span></p>
                 <div id="touchpad" style="width: 100%; height: 250px; position: relative; background-color: lightgray">
                 </div>
             </section>
@@ -88,14 +90,10 @@
                 <div v-for="(slider, index) in sliders" class="w3-panel w3-display-container w3-card" :key="index">
                     <button class="w3-btn w3-blue w3-display-topright"
                         @click="sliders.splice(index, 1)"><b>&times;</b></button>
-                    <p><b>Giá trị</b>: <span v-html="sliders[index].value"></span></p>
-                    <input type="range" class="w3-input" 
-                        v-model.number="sliders[index].value" 
-                        :min="sliders[index].min"
-                        :max="sliders[index].max" 
-                        :step="sliders[index].step"
-                        @input="send_cmd(password, 'thanhtruot', sliders[index].value)"
-                    >
+                    <p><b>Giá trị</b>: <span>{{ sliders[index].value }}</span></p>
+                    <input type="range" class="w3-input" v-model.number="sliders[index].value" :min="sliders[index].min"
+                        :max="sliders[index].max" :step="sliders[index].step"
+                        @input="send_cmd(password, 'thanhtruot', sliders[index].value)">
                     <label class="w3-col s4 m4 l4 w3-left-align"><b>Đầu</b></label>
                     <label class="w3-col s4 m4 l4 w3-center"><b>Bước</b></label>
                     <label class="w3-col s4 m4 l4 w3-right-align"><b>Cuối</b></label>
@@ -215,7 +213,7 @@
                     }, deep: true
                 },
                 toggleVoice() {
-                    if (this.toggleVoice){
+                    if (this.toggleVoice) {
                         annyang.start();
                     }
                     else annyang.abort();
