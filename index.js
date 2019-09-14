@@ -6,6 +6,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 
 app.use(express.static("./public"));
 app.use(bodyParser.json());
@@ -48,6 +49,27 @@ app.get('/facebook', (req, res) => {
   }
 });
 
+const sendTextMessage = (userId, text) => {
+  return fetch(
+    `https://graph.facebook.com/v2.6/me/messages?access_token=${process.env.FACEBOOK_ACCESS_TOKEN}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        messaging_type: 'RESPONSE',
+        recipient: {
+          id: userId,
+        },
+        message: {
+          text,
+        },
+      }),
+    }
+  );
+}
+
 // Creates the endpoint for our webhook 
 app.post('/facebook', (req, res) => {  
  
@@ -62,6 +84,9 @@ app.post('/facebook', (req, res) => {
       // Gets the message. entry.messaging is an array, but 
       // will only ever contain one message, so we get index 0
       let webhook_event = entry.messaging[0];
+      const sender = webhook_event.sender.id;
+      const message = webhook_event.message.text;
+      sendTextMessage(sender, message);
       console.log(webhook_event);
     });
 
