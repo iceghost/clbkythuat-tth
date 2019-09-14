@@ -79,7 +79,7 @@
             <section class="w3-panel w3-card w3-padding">
                 <h3>Touchpad</h3>
                 <p><b>Tốc độ</b>: <span v-html="t_speed[speed]"></span></p>
-                <input type="range" min=0 max=3 v-model="speed">
+                <input type="range" min=0 max=3 value=0 v-model.number="speed">
                 <p><b>Tọa độ</b>: x = <span v-html="joystick.x"></span>, y = <span v-html="joystick.y"></span></p>
                 <div id="touchpad" style="width: 100%; height: 250px; position: relative; background-color: lightgray">
                 </div>
@@ -91,8 +91,13 @@
                     <button class="w3-btn w3-blue w3-display-topright"
                         @click="sliders.splice(index, 1)"><b>&times;</b></button>
                     <p><b>Giá trị</b>: <span v-html="sliders[index].value"></span></p>
-                    <input type="range" class="w3-input" v-model.number="sliders[index].value" :min="sliders[index].min"
-                        :max="sliders[index].max" :step="sliders[index].step">
+                    <input type="range" class="w3-input" 
+                        v-model.number="sliders[index].value" 
+                        :min="sliders[index].min"
+                        :max="sliders[index].max" 
+                        :step="sliders[index].step"
+                        @input="send_cmd(password, 'thanhtruot', sliders[index].value)"
+                    >
                     <label class="w3-col s4 m4 l4 w3-left-align"><b>Đầu</b></label>
                     <label class="w3-col s4 m4 l4 w3-center"><b>Bước</b></label>
                     <label class="w3-col s4 m4 l4 w3-right-align"><b>Cuối</b></label>
@@ -126,10 +131,12 @@
                 newCommand: -1,
                 commands: [
                     ['', 'Trống'],
-                    ['tat-led-1', 'Tắt đèn 1'],
-                    ['mo-led-1', 'Mở đèn 1'],
-                    ['tat-led-2', 'Tắt đèn 2'],
-                    ['mo-led-2', 'Mở đèn 2'],
+                    ['led-1-tat', 'Tắt đèn 1'],
+                    ['led-1-mo', 'Mở đèn 1'],
+                    ['led-1-doi', 'Đổi trạng thái đèn 1'],
+                    ['led-2-tat', 'Tắt đèn 2'],
+                    ['led-2-mo', 'Mở đèn 2'],
+                    ['led-2-doi', 'Đổi trạng thái đèn 2'],
                     ['toi', 'Xe đi tới'],
                     ['lui', 'Xe đi lui'],
                     ['trai', 'Xe rẽ trái'],
@@ -206,7 +213,7 @@
                 },
                 joystick: {
                     handler() {
-                        this.send_cmd(this.password, 'joystick', { x: this.joystick.x, y: this.joystick.y, tocdo: parseInt(this.speed) });
+                        this.send_cmd(this.password, 'joystick', { x: this.joystick.x, y: this.joystick.y, tocdo: this.speed });
                     }, deep: true
                 },
                 toggleVoice() {
