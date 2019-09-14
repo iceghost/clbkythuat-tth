@@ -10,19 +10,11 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('new');
 });
 
 app.get('/guide', (req, res) => {
   res.render('guide');
-});
-
-app.get('/voice', (req, res) => {
-  res.render('voice');
-});
-
-app.get('/new', (req, res) => {
-  res.render('new');
 });
 
 var login = []; // Danh sách những arduino đăng nhập, login[...].id = id của socket
