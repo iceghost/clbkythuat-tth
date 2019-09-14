@@ -86,12 +86,19 @@ app.post('/facebook', (req, res) => {
       let webhook_event = entry.messaging[0];
       const sender = webhook_event.sender.id;
       const message = webhook_event.message.text;
-      const s_message = message.split(' ', 2);
-      sendTextMessage(sender, `Gửi lệnh ${s_message[1]} tới id ${s_message[0]}`);
-      console.log(webhook_event);
-      var index = ESPs.map(value => value.pass).indexOf(s_message[0]);
-      if (index >= 0) {
-        io.to(ESPs[index].id).emit('gui-lenh', { lenh: 'guilenh', giatri: s_message[1], }); // gửi đến socket có id trong JSON ESPs
+      const s_message = message.split(' ', 3);
+      switch (s_message[0]) {
+        case '/send':
+          console.log(webhook_event);
+          var index = ESPs.map(value => value.pass).indexOf(s_message[1]);
+          if (index >= 0) {
+            io.to(ESPs[index].id).emit('gui-lenh', { lenh: 'guilenh', giatri: s_message[2], }); // gửi đến socket có id trong JSON ESPs
+            sendTextMessage(sender, 'Đã gửi');
+          }
+          else {
+            sendTextMessage(sender, 'ESP có mật khẩu trên hiện đang không online');
+          }
+          break;
       }
     });
 
