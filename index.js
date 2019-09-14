@@ -71,23 +71,28 @@ const sendTextMessage = (userId, text) => {
 }
 
 // Creates the endpoint for our webhook 
-app.post('/facebook', (req, res) => {  
- 
+app.post('/facebook', (req, res) => {
+
   let body = req.body;
 
   // Checks this is an event from a page subscription
   if (body.object === 'page') {
 
     // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
+    body.entry.forEach(function (entry) {
 
       // Gets the message. entry.messaging is an array, but 
       // will only ever contain one message, so we get index 0
       let webhook_event = entry.messaging[0];
       const sender = webhook_event.sender.id;
       const message = webhook_event.message.text;
-      sendTextMessage(sender, message);
+      const s_message = message.split(' ', 2);
+      sendTextMessage(sender, `Gửi lệnh ${s_message[1]} tới id ${s_message[0]}`);
       console.log(webhook_event);
+      var index = ESPs.map(value => value.pass).indexOf(s_message[0]);
+      if (index >= 0) {
+        io.to(ESPs[index].id).emit('gui-lenh', { lenh: 'guilenh', giatri: s_message[1], }); // gửi đến socket có id trong JSON ESPs
+      }
     });
 
     // Returns a '200 OK' response to all requests
