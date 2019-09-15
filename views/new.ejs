@@ -68,9 +68,11 @@
                 <label for="time-format"> Thời gian</label>
                 <div class="w3-leftbar w3-border-blue w3-pale-blue" style="height: 10em; overflow-y: scroll;">
                     <!-- YYYY-MM-DDTHH:MM:SS.MSSZ -->
-                    <div v-if="esp" v-html="esp.log.map(mess =>
-                        ((timeFormat)? mess.time.slice(-13, -5) + ': ' : '') + mess.content
-                    ).join('<br/>')"></div>
+                    <ul v-if="esp">
+                        <li v-for="mess in esp.log">
+                             {{ ((timeFormat)? mess.time.slice(-13, -5) + ': ' : '') + mess.content }}
+                        </li>
+                    </ul>
                 </div>
             </section>
         </div>
@@ -169,7 +171,7 @@
                     this.joystick.y = 0;
                 });
                 // Mật khẩu
-                setInterval(() => { socket.emit('tim-nguoi-than', this.password); }, 5000);
+                setInterval(() => { socket.emit('tim-nguoi-than', this.password); }, 1000);
                 socket.on('ket-qua', (obj) => { this.esp = obj; });
                 // Giọng nói
                 annyang.setLanguage("vi-VN");
