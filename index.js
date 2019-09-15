@@ -89,15 +89,29 @@ app.post('/facebook', (req, res) => {
       const s_message = message.split(' ', 3);
       switch (s_message[0]) {
         case '/send':
-          console.log(webhook_event);
+          // console.log(webhook_event);
           var index = ESPs.map(value => value.pass).indexOf(s_message[1]);
           if (index >= 0) {
             io.to(ESPs[index].id).emit('gui-lenh', { lenh: 'guilenh', giatri: s_message[2], }); // gửi đến socket có id trong JSON ESPs
-            sendTextMessage(sender, 'Đã gửi');
+            sendTextMessage(sender, `Đã gửi lệnh ${s_message[2]} cho ESP có mật khẩu ${s_message[1]}`);
           }
           else {
-            sendTextMessage(sender, 'ESP có mật khẩu trên hiện đang không online');
+            sendTextMessage(sender, `ESP có mật khẩu ${s_message[1]} hiện đang không online`);
           }
+          break;
+
+        case '/help':
+          const reply = "Các lệnh hiện có:\n\n" +
+          "1. /send <pass> <cmd>\nGửi lệnh <cmd> cho ESP có mật khẩu <pass>\n\n" +
+          "2. /help\nMở menu hướng dẫn\n\n" +
+          "Mọi thắc mắc, góp ý xin gửi về fb.com/iceghost.tth. " +
+          "Chúc bạn có trải nghiệm vui vẻ cùng với IOT bot!";
+          sendTextMessage(sender, reply);
+
+          break;
+
+        default:
+          sendTextMessage(sender, 'Sai cú pháp. Gõ /help để biết danh sách các lệnh');
           break;
       }
     });
