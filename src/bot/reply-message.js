@@ -1,4 +1,5 @@
 const sendMessage = require('./send-message');
+const addFacebookUser = require('./add-facebook-user');
 
 const replyMessage = (req, res) => {
 
@@ -15,7 +16,7 @@ const replyMessage = (req, res) => {
             let webhook_event = entry.messaging[0];
             const sender = webhook_event.sender.id;
             const message = webhook_event.message.text;
-            const s_message = message.split(' ', 3);
+            const s_message = message.split(' ');
             switch (s_message[0]) {
                 case '/send':
                     // console.log(webhook_event);
@@ -38,6 +39,10 @@ const replyMessage = (req, res) => {
                     sendMessage(sender, reply);
 
                     break;
+                
+                case '/password':
+                    const password = s_message[1];
+                    addFacebookUser(sender, password);
 
                 default:
                     sendMessage(sender, 'Sai cú pháp. Gõ /help để biết danh sách các lệnh');
