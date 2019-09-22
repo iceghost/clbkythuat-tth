@@ -1,5 +1,5 @@
+const io = require('socket.io');
 const sendMessage = require('./send-message');
-const addFacebookUser = require('./add-facebook-user');
 
 const replyMessage = (req, res) => {
 

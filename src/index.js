@@ -9,6 +9,6 @@ app.set("views", __dirname);
 
 app.use(require('./site/route')); // homepage
 
-app.use('/facebook', require('./bot/route')) // bot
+app.use('/facebook', require('./facebook/route')) // bot
 
 module.exports = app;

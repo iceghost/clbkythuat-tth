@@ -5,11 +5,8 @@ const PORT = process.env.PORT || 3000;
 
 const app = require('./index')
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+require('./socket/socket').mount(server);
 
-const { clearOnlineESPs } = require('./esp/esps');
-clearOnlineESPs();
-
-io.on("connection", require('./socket/on-connect'));
+require('./esp/esps').clearOnline();
 
 server.listen(PORT, () => console.log(`Example app listening on port 3000! IP Address:  ${ip.address()}`));
