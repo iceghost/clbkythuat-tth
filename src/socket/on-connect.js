@@ -1,4 +1,4 @@
-const esps = require('../esp/esps')
+const esps = require('../esp/esp')
 
 const onConnect = (socket) => {
     // Arduino đăng nhập tại đây
@@ -23,10 +23,11 @@ const onConnect = (socket) => {
     socket.on('tim-nguoi-than', (pass) => {
         esps.get({ pass: pass })
             .then((res) => {
+                // console.log(res)
                 socket.emit('ket-qua', res)
             })
     });
-    // socket.on('log', (data) => addLog());
+    socket.on('log', (data) => { esps.addLog({socketId: socket.id, data: data}) });
     socket.on('disconnect', () => esps.del({ id: socket.id }));
 };
 

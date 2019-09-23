@@ -10,8 +10,7 @@ client.query(`
             socket_id VARCHAR(32) PRIMARY KEY UNIQUE
         );
     `)
-    .catch(e => console.error(e.stack))
-    ;
+    .catch(e => console.error(e.stack));
 
 client.query(`
         CREATE TABLE fb_users (
@@ -19,15 +18,13 @@ client.query(`
             esp_id VARCHAR(32) UNIQUE
         );
     `)
-    .catch(e => console.error(e.stack))
-    ;
+    .catch(e => console.error(e.stack));
 
 client.query(`
         CREATE TABLE logs (
-            esp_id VARCHAR(32) PRIMARY KEY UNIQUE,
+            socket_id VARCHAR(32),
             timestamp TIMESTAMPTZ,
             log TEXT
         );
     `)
-    .catch(e => console.error(e.stack))
-    ;
+    .catch(e => console.error(e.stack));
