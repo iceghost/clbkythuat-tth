@@ -22,22 +22,36 @@
     <a href="/guide" class="w3-bar-item w3-button w3-mobile">Hướng dẫn</a>
   </div>
   <div class="w3-row">
-    <div class="w3-container w3-col w3-hide-small m3 w3-right-align w3-indigo">
+    <div class="w3-container w3-col m3 s12 w3-indigo">
       <ul class="w3-ul">
-        <li><h1>Mục lục</h1></li>
-        <li><a href="#library">Cài thư viện</a></li>
-        <li><a href="#example">Code mẫu</a></li>
+        <li>
+          <h1>Mục lục</h1>
+        </li>
+        <li>
+          <h2>Kết nối ESP8266</h2>
+          <ul>
+            <li><a href="#library">Cài thư viện</a></li>
+            <li><a href="#example">Code mẫu</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Sử dụng server qua Messenger</h2>
+          <ul>
+            <li><a href="#syntax">Cú pháp</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
     <div class="w3-container w3-col s12 m6">
-      <h1 id="library">Cài thư viện</h1>
-      <p>Tải và cài 3 thư viện sau:<p>
+      <h1>Kết nối ESP8266</h1>
+      <h2 id="library">Cài thư viện</h2>
+      <p>Tải và cài 3 thư viện sau:</p>
       <ul>
         <li><a href="https://github.com/timum-viw/socket.io-client">socket.io-client</a></li>
         <li><a href="https://github.com/Links2004/arduinoWebSockets">arduinoWebSockets</a></li>
         <li><a href="https://github.com/bblanchon/ArduinoJson">ArduinoJson</a></li>
       </ul>
-      <h1 id="example">Code mẫu</h1>
+      <h2 id="example">Code mẫu</h2>
       <p>Các đoạn quan trọng được chú thích ở những chỗ màu xanh lá</p>
       <pre>
 <code class="arduino">#include &lt;ESP8266WiFi.h&gt;
@@ -252,7 +266,33 @@ void out(int lspeed, int rspeed)
   outLeft(lspeed);
   outRight(rspeed);
 }</code>
-      </pre>
+</pre>
+      <h1>Sử dụng server qua Messenger</h1>
+      <p>Hiện tại bạn có thể sử dụng server bằng cách nhắn tin vào trang facebook <a href="m.me/t2iot">m.me/t2iot</a>.
+      </p>
+      <h2 id="syntax">Cú pháp</h2>
+      <table class="w3-table w3-bordered" width="100%">
+        <tr class="w3-indigo">
+          <th width="50%">Tin nhắn</th>
+          <th width="50%">Ý nghĩa</th>
+        </tr>
+        <tr>
+          <td width="50%"><code class="w3-codespan">pass &lt;mật khẩu&gt;</code></td>
+          <td width="50%">Gắn mật khẩu với tài khoản facebook của bạn</td>
+        </tr>
+        <tr>
+          <td width="50%"><code class="w3-codespan">send &lt;lệnh&gt;</code></td>
+          <td width="50%">Gửi lệnh đến ESP8266 kết nối đến server bằng mật khẩu khớp với mật khẩu của bạn</td>
+        </tr>
+        <tr>
+          <td width="50%"><code class="w3-codespan">help</code></td>
+          <td width="50%">Mở menu lệnh</td>
+        </tr>
+        <tr>
+          <td width="50%"><code class="w3-codespan">info</code></td>
+          <td width="50%">Xem thông tin của bot</td>
+        </tr>
+      </table>
     </div>
   </div>
 </body>
