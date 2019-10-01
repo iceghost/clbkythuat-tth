@@ -1,34 +1,30 @@
-const esps = require('../esp/esp')
+import { getESP, addESP, addLog } from '../db/db';
 
 const onConnect = (socket) => {
-    // Arduino đăng nhập tại đây
-    socket.on('dang-nhap', (pass) => {
-        esps.add({ id: socket.id, pass: pass });
-        console.log('Added')
-    });
+  // Arduino đăng nhập tại đây
+  socket.on('dang-nhap', async (pass) => {
+    await addESP({ socketId: socket.id, espId: pass });
+    console.log('Added');
+  });
 
-    socket.on('gui-lenh', (data) => {
-        console.log(data)
-        const espId = data.pass;
-        const command = data.value;
-        esps.get({ pass: espId })
-            .then((res) => {
-                if (res) {
-                    const socketId = res.id;
-                    socket.broadcast.to(socketId).emit('gui-lenh', command);
-                }
-            });
-    });
+  socket.on('gui-lenh', async ({ pass, value }) => {
+    console.log(value);
+    const esp = await getESP({ espId: pass });
+    if (esp) {
+      socket.broadcast.to(esp.socket_id).emit('gui-lenh', value);
+    }
+  });
 
-    socket.on('tim-nguoi-than', (pass) => {
-        esps.get({ pass: pass })
-            .then((res) => {
-                // console.log(res)
-                socket.emit('ket-qua', res)
-            })
-    });
-    socket.on('log', (data) => { esps.addLog({socketId: socket.id, data: data}) });
-    socket.on('disconnect', () => esps.del({ id: socket.id }));
+  socket.on('tim-nguoi-than', async (pass) => {
+    if (pass) {
+      const esp = await getESP({ espId: pass });
+      socket.emit('ket-qua', esp);
+    }
+    else socket.emit('ket-qua', null);
+  });
+
+  socket.on('log', (data) => { addLog({ socketId: socket.id, log: data }); });
+  // socket.on('disconnect', () => esps.del({ id: socket.id }));
 };
 
 module.exports = onConnect;

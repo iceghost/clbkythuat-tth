@@ -4,8 +4,12 @@
   "description": "My club's website",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server"
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "npm run clean && babel src -d dist --copy-files",
+    "dev": "nodemon src/server.js --exec babel-node",
+    "start": "npm run build && node dist/server.js",
+    "create-tables": "babel-node src/db/create-tables",
+    "test": "babel-node src/db/db"
   },
   "repository": {
     "type": "git",
@@ -14,11 +18,14 @@
   "author": "Nguyen Duy Khang",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
     "body-parser": "^1.19.0",
     "dotenv": "^8.1.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
-    "facebook-chat-api": "^1.6.1",
     "ip": "^1.1.5",
     "node-fetch": "^2.6.0",
     "pg": "^7.12.1",
@@ -28,5 +35,8 @@
     "url": "https://github.com/iceghosttth/clbkythuat-tth/issues"
   },
   "homepage": "https://github.com/iceghosttth/clbkythuat-tth#readme",
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
 }

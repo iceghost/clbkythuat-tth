@@ -69,8 +69,8 @@
                 <div class="w3-leftbar w3-border-blue w3-pale-blue" style="height: 10em; overflow-y: scroll;">
                     <!-- YYYY-MM-DDTHH:MM:SS.MSSZ -->
                     <ul v-if="esp">
-                        <li v-for="log in esp.log">
-                             {{ ((timeFormat)? log.timestamp + ': ' : '') + log.log }}
+                        <li v-for="log in esp.log.map(log => JSON.parse(log))">
+                             {{ ((timeFormat)? log.timestamp + ': ' : '') + log.content }}
                         </li>
                     </ul>
                 </div>

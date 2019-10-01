@@ -5,20 +5,20 @@ const sendMessage = (userId, text) => {
     `https://graph.facebook.com/v2.6/me/messages?access_token=${process.env.FACEBOOK_ACCESS_TOKEN}`,
     {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'POST',
       body: JSON.stringify({
         messaging_type: 'RESPONSE',
         recipient: {
-          id: userId,
+          id: userId
         },
         message: {
-          text,
-        },
-      }),
+          text
+        }
+      })
     }
-  )
+  );
 };
 
 module.exports = sendMessage;

@@ -1,30 +1,28 @@
-const dotenv = require('dotenv').config();
+import { pool } from './pool';
 
-const client = require('./client')
+pool.connect();
 
-client.connect();
-
-client.query(`
-        CREATE TABLE online_esps (
-            esp_id VARCHAR(32) UNIQUE,
-            socket_id VARCHAR(32) PRIMARY KEY UNIQUE
+async function createTable () {
+  try {
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS connected_esp (
+            id VARCHAR(32) PRIMARY KEY NOT NULL,
+            socket_id VARCHAR(32) UNIQUE NOT NULL,
+            log TEXT[]
         );
-    `)
-    .catch(e => console.error(e.stack));
+    `);
 
-client.query(`
-        CREATE TABLE fb_users (
-            fb_id VARCHAR(32) PRIMARY KEY UNIQUE,
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS facebook_user (
+            id VARCHAR(32) PRIMARY KEY NOT NULL,
             esp_id VARCHAR(32) UNIQUE
         );
-    `)
-    .catch(e => console.error(e.stack));
+    `);
+  } catch (e) { console.error(e.stack); }
 
-client.query(`
-        CREATE TABLE logs (
-            socket_id VARCHAR(32),
-            timestamp TIMESTAMPTZ,
-            log TEXT
-        );
-    `)
-    .catch(e => console.error(e.stack));
+  pool.end();
+
+  console.log('Done!');
+}
+
+createTable();
