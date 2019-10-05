@@ -1,4 +1,4 @@
-import { getESP, addESP, addLog } from '../db/db';
+import { getESP, addESP, addLog, removeESP } from '../db';
 
 const onConnect = (socket) => {
   // Arduino đăng nhập tại đây
@@ -9,6 +9,7 @@ const onConnect = (socket) => {
 
   socket.on('gui-lenh', async ({ pass, value }) => {
     console.log(value);
+
     const esp = await getESP({ espId: pass });
     if (esp) {
       socket.broadcast.to(esp.socket_id).emit('gui-lenh', value);
@@ -19,12 +20,11 @@ const onConnect = (socket) => {
     if (pass) {
       const esp = await getESP({ espId: pass });
       socket.emit('ket-qua', esp);
-    }
-    else socket.emit('ket-qua', null);
+    } else socket.emit('ket-qua', null);
   });
 
   socket.on('log', (data) => { addLog({ socketId: socket.id, log: data }); });
-  // socket.on('disconnect', () => esps.del({ id: socket.id }));
+  socket.on('disconnect', () => removeESP({ socketId: socket.id }));
 };
 
-module.exports = onConnect;
+export default onConnect;

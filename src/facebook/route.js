@@ -1,8 +1,11 @@
-const express = require('express');
+import { Router } from 'express';
 
-const router = express.Router();
+import verifyWebhook from './verify-webhook';
+import replyMessage from './reply-message';
 
-router.get('/', require('./verify-webhook'));
-router.post('/', require('./reply-message'));
+const router = Router();
 
-module.exports = router;
+router.get('/', verifyWebhook);
+router.post('/', replyMessage);
+
+export default router;

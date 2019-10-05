@@ -1,43 +1,29 @@
-const sendMessage = require('./send-message');
-const user = require('../db/user');
-const esp = require('../db/esp');
-const socket = require('socket.io-client')(`http://${process.env.SOCKET_HOST}`);
+import { getESP, addFacebookUser } from '../db';
+import sendMessage from './send-message';
 
-const replyMessage = (req, res) => {
+import SocketClient from 'socket.io-client';
+
+const socket = SocketClient(`http://${process.env.SOCKET_HOST}`);
+
+const replyMessage = async (req, res) => {
   const body = req.body;
 
-  // Checks this is an event from a page subscription
   if (body.object === 'page') {
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function (entry) {
-      // Gets the message. entry.messaging is an array, but
-      // will only ever contain one message, so we get index 0
+    for (const entry of body.entry) {
       const webhookEvent = entry.messaging[0];
       const sender = webhookEvent.sender.id;
       const message = webhookEvent.message.text;
-      const { command, argument } = message.trim().split(/[\n ]+/); // tách khoảng trắng dùng regex
-      switch (command) {
-        case 'send':
-          // console.log(webhookEvent);
-          user.get({ id: sender })
-            .then(res => {
-              if (res) {
-                const espId = res.pass;
-                esp.get({ pass: res.pass })
-                  .then(res => {
-                    if (res) {
-                      // io.sockets.to(res.id).emit('gui-lenh', { lenh: 'guilenh', giatri: argument, }); // gửi đến socket có id trong JSON ESPs
-                      // emitToId(res.id, 'gui-lenh', { lenh: 'guilenh', giatri: argument, });
-                      socket.emit('gui-lenh', { pass: espId, value: { lenh: 'guilenh', giatri: argument } });
-                      sendMessage(sender, `Đã gửi lệnh ${argument} cho ESP của bạn`);
-                    } else sendMessage(sender, 'ESP của bạn không online');
-                  })
-                  .catch(e => console.log(e));
-              } else sendMessage(sender, 'Vui lòng đặt mật khẩu bằng lệnh "pass <pass>"');
-            })
-            .catch(e => console.log(e));
+      const [command, argument] = message.trim().split(/[\n ]+/); // tách khoảng trắng dùng regex
 
+      switch (command) {
+        case 'send': {
+          const result = await getESP({ facebookId: sender });
+          if (result) {
+            socket.emit('gui-lenh', { pass: result.esp_id, value: { lenh: 'guilenh', giatri: argument } });
+            sendMessage(sender, `Đã gửi lệnh ${argument} cho ESP của bạn.`);
+          } else sendMessage(sender, 'ESP của bạn hiện không online.');
           break;
+        }
 
         case 'help': {
           const reply = 'Các lệnh hiện có:\n' +
@@ -50,8 +36,7 @@ const replyMessage = (req, res) => {
         }
 
         case 'pass': {
-          const password = argument;
-          user.add({ id: sender, pass: password });
+          await addFacebookUser({ userId: sender, espId: argument });
           sendMessage(sender, 'Đã đặt mật khẩu');
           break;
         }
@@ -69,7 +54,7 @@ const replyMessage = (req, res) => {
           sendMessage(sender, 'Sai cú pháp. Gõ "help" để biết danh sách các lệnh');
           break;
       }
-    });
+    }
 
     // Returns a '200 OK' response to all requests
     res.status(200).send('EVENT_RECEIVED');
@@ -79,4 +64,4 @@ const replyMessage = (req, res) => {
   }
 };
 
-module.exports = replyMessage;
+export default replyMessage;

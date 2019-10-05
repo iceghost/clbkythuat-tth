@@ -19,4 +19,4 @@ const verifyWebhook = (req, res) => {
   }
 };
 
-module.exports = verifyWebhook;
+export default verifyWebhook;

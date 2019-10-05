@@ -1,8 +1,8 @@
 import { DATABASE_URL, DATABASE_SSL } from '../config';
 
-const { Pool } = require('pg');
+import { Pool } from 'pg';
 
-export const pool = new Pool({
+export default new Pool({
   connectionString: DATABASE_URL,
   ssl: !(DATABASE_SSL)
 });

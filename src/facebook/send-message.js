@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 const sendMessage = (userId, text) => {
   return fetch(
@@ -21,4 +21,4 @@ const sendMessage = (userId, text) => {
   );
 };
 
-module.exports = sendMessage;
+export default sendMessage;

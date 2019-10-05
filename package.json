@@ -29,6 +29,7 @@
     "ip": "^1.1.5",
     "node-fetch": "^2.6.0",
     "pg": "^7.12.1",
+    "regenerator-runtime": "^0.13.3",
     "socket.io": "^2.2.0"
   },
   "bugs": {

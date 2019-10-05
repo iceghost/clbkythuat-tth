@@ -1,14 +1,17 @@
-const express = require('express');
+import express from 'express';
+import bodyParser from 'body-parser';
+
+import facebookRoute from './facebook/route';
+import siteRoute from './site/route'
+
 const app = express();
-const bodyParser = require('body-parser');
 
 app.use(express.static('./public'));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
 
-app.use(require('./site/route')); // homepage
+app.use(siteRoute); // homepage
+app.use('/facebook', facebookRoute); // bot
 
-app.use('/facebook', require('./facebook/route')); // bot
-
-module.exports = app;
+export default app;
