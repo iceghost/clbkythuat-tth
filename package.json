@@ -7,7 +7,7 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel src -d dist --copy-files",
     "dev": "nodemon src/server.js --exec babel-node",
-    "start": "npm run build && node dist/server.js",
+    "start": "node dist/server.js",
     "create-tables": "babel-node src/db/create-tables",
     "test": "babel-node src/db/db"
   },

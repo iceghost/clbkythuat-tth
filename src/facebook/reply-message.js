@@ -1,5 +1,6 @@
 import { getESP, addFacebookUser } from '../db';
 import sendMessage from './send-message';
+import sendIndicator from './send-indicator';
 
 import SocketClient from 'socket.io-client';
 
@@ -13,15 +14,21 @@ const replyMessage = async (req, res) => {
       const webhookEvent = entry.messaging[0];
       const sender = webhookEvent.sender.id;
       const message = webhookEvent.message.text;
-      const [command, argument] = message.trim().split(/[\n ]+/); // tách khoảng trắng dùng regex
+      const [command, argument] = message.trim().toLowerCase().split(/[\n ]+/); // tách khoảng trắng dùng regex
 
+      sendIndicator(sender, 'mark_seen')
+      sendIndicator(sender, 'typing_on')
       switch (command) {
         case 'send': {
           const result = await getESP({ facebookId: sender });
+          console.log(result)
           if (result) {
-            socket.emit('gui-lenh', { pass: result.esp_id, value: { lenh: 'guilenh', giatri: argument } });
-            sendMessage(sender, `Đã gửi lệnh ${argument} cho ESP của bạn.`);
-          } else sendMessage(sender, 'ESP của bạn hiện không online.');
+            if (result.socket_id) {
+              socket.emit('gui-lenh', { pass: result.esp_id, value: { lenh: 'guilenh', giatri: argument } });
+              sendMessage(sender, `Đã gửi lệnh ${argument} cho ESP của bạn.`);
+            } else sendMessage(sender, 'ESP của bạn hiện không online.');
+
+          } else sendMessage(sender, 'Vui lòng đặt mật khẩu bằng lệnh "pass <pass>"');
           break;
         }
 

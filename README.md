@@ -1,4 +1,5 @@
 To start the server in development, use `npm run dev`
+
 To start the server in production, use `npm start`
 
 .env file should have the following structure:
