@@ -12,6 +12,7 @@ const replyMessage = async (req, res) => {
   if (body.object === 'page') {
     for (const entry of body.entry) {
       const webhookEvent = entry.messaging[0];
+      console.log(webhookEvent)
       const sender = webhookEvent.sender.id;
       const message = webhookEvent.message.text;
       const [command, argument] = message.trim().toLowerCase().split(/[\n ]+/); // tách khoảng trắng dùng regex
