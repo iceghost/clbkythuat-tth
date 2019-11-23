@@ -14,7 +14,7 @@ const replyMessage = async (req, res) => {
       const webhookEvent = entry.messaging[0];
       console.log(webhookEvent)
       const sender = webhookEvent.sender.id;
-      const message = webhookEvent.message.text;
+      const message = webhookEvent.message.text || webhookEvent.postback.payload;
       const [command, argument] = message.trim().toLowerCase().split(/[\n ]+/); // tách khoảng trắng dùng regex
 
       sendIndicator(sender, 'mark_seen')
