@@ -72,7 +72,7 @@ const replyMessage = async (req, res) => {
       res.sendStatus(404);
     }
   }
-  catch (e) { console.log(e.stack) }
+  catch (e) { console.log(e.stack); res.sendStatus(404); }
 };
 
 export default replyMessage;
