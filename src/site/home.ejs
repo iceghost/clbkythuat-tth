@@ -95,7 +95,7 @@
                     <p><b>Giá trị</b>: <span>{{ sliders[index].value }}</span></p>
                     <input type="range" class="w3-input" v-model.number="sliders[index].value" :min="sliders[index].min"
                         :max="sliders[index].max" :step="sliders[index].step"
-                        @input="send_cmd(password, 'thanhtruot', sliders[index].value)">
+                        @input="send_cmd(password, 'thanhtruot' + index, sliders[index].value)">
                     <label class="w3-col s4 m4 l4 w3-left-align"><b>Đầu</b></label>
                     <label class="w3-col s4 m4 l4 w3-center"><b>Bước</b></label>
                     <label class="w3-col s4 m4 l4 w3-right-align"><b>Cuối</b></label>
