@@ -27,7 +27,7 @@
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "ip": "^1.1.5",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "pg": "^7.12.1",
     "regenerator-runtime": "^0.13.3",
     "socket.io": "^2.2.0"
